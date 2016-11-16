@@ -102,4 +102,18 @@ var WangYuLong = {
         }
         return newArr
     },
+    flattenDeep: function(array) {
+        for (var i = 1;; i++) {
+            var tOrF = true
+            array = WangYuLong.flatten(array)
+            for (var j = 0; j < array.length; j++) {
+                if (array[j][0] != undefined) {
+                    tOrF = false
+                }
+            }
+            if (tOrF) {
+                return array
+            }
+        }
+    },
 }
