@@ -118,8 +118,8 @@ var WangYuLong = {
     },
     fromPairs: function(pairs) {
         var newObj = {}
-        newObj['' + '\'' + pairs[0][0] + '\''] = pairs[0][1]
-        newObj['' + '\'' + pairs[1][0] + '\''] = pairs[0][1]
+        newObj['' + pairs[0][0]] = pairs[0][1]
+        newObj['' + pairs[1][0]] = pairs[0][1]
         return newObj
     },
     initial: function(array) {
