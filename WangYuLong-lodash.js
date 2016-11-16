@@ -89,4 +89,17 @@ var WangYuLong = {
         }
         return newArr
     },
+    flatten: function(array) {
+        var newArr = []
+        for (var i = 0; i < array.length; i++) {
+            if (array[i][0] == undefined) {
+                newArr.push(array[i])
+            } else {
+                for (var j = 0; j < array[i].length; j++) {
+                    newArr.push(array[i][j])
+                }
+            }
+        }
+        return newArr
+    },
 }
