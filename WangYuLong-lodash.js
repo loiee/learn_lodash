@@ -116,4 +116,31 @@ var WangYuLong = {
             }
         }
     },
+    fromPairs: function(pairs) {
+        var newObj = {}
+        newObj['' + '\'' + pairs[0][0] + '\''] = pairs[0][1]
+        newObj['' + '\'' + pairs[1][0] + '\''] = pairs[0][1]
+        return newObj
+    },
+    initial: function(array) {
+        array.splice((array.length - 1), 1)
+        return array
+    },
+    intersection: function(argument) {
+        var newArr = []
+        var sameArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            newArr.push(arguments[0][i])
+        }
+        for (var j = 0; j < newArr.length; j++) {
+            for (var k = 1; k < arguments.length; k++) {
+                for (var m = 0; m < arguments[k].length; m++) {
+                    if (newArr[j] == arguments[k][m]) {
+                        sameArr.push(newArr[j])
+                    }
+                }
+            }
+        }
+        return sameArr
+    },
 }
