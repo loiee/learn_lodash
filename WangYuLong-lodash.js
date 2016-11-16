@@ -73,5 +73,20 @@ var WangYuLong = {
         newArr.splice(newArr.length - arguments[1], arguments[1])
         return newArr
     },
-
+    fill: function() {
+        var newArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            newArr.push(arguments[0][i])
+        }
+        if (arguments[2] == undefined) {
+            arguments[2] = 0
+        }
+        if (arguments[3] == undefined) {
+            arguments[3] = arguments[0].length
+        }
+        for (var i = arguments[2]; i < arguments[3]; i++) {
+            newArr[i] = arguments[1]
+        }
+        return newArr
+    },
 }
