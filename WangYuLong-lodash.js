@@ -118,8 +118,9 @@ var WangYuLong = {
     },
     fromPairs: function(pairs) {
         var newObj = {}
-        newObj['' + pairs[0][0]] = pairs[0][1]
-        newObj['' + pairs[1][0]] = pairs[0][1]
+        for (var i = 0; i < pairs.length; i++) {
+            newObj[pairs[i][0]] = pairs[i][1]
+        }
         return newObj
     },
     initial: function(array) {
@@ -142,5 +143,236 @@ var WangYuLong = {
             }
         }
         return sameArr
+    },
+    pull: function() {
+        var newArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            var tOrF = true
+            for (var j = 1; j < arguments.length; j++) {
+                if (arguments[0][i] == arguments[j]) {
+                    tOrF = false
+                }
+            }
+            if (tOrF) {
+                newArr.push(arguments[0][i])
+            }
+        }
+        return newArr
+    },
+    pullAll: function() {
+        var newArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            var tOrF = true
+            for (var j = 1; j < arguments.length; j++) {
+                if (arguments[0][i] == arguments[j]) {
+                    tOrF = false
+                }
+                if (arguments[j][0] != undefined) {
+                    for (var k = 0; k < arguments[j].length; k++) {
+                        if (arguments[0][i] == arguments[j][k]) {
+                            tOrF = false
+                        }
+                    }
+                }
+            }
+            if (tOrF) {
+                newArr.push(arguments[0][i])
+            }
+        }
+        return newArr
+    },
+    pullAt: function(array, indexes) {
+        var newArr = []
+        var fixdArr = []
+        for (var i = 0; i < array.length; i++) {
+            fixdArr.push(array[i])
+        }
+        var counter = 0
+        for (var i = 0; i < indexes.length; i++) {
+            newArr.push(fixdArr[indexes[i]])
+            array.splice(indexes[i] - counter, 1)
+            counter++
+        }
+        return newArr
+    },
+    reverse: function(array) {
+        var counter = 0
+        for (var i = 0; counter < array.length; i = 0) {
+            array.push(array[i])
+            array.splice(0, 1)
+            counter++
+        }
+        return array
+    },
+    tail: function(array) {
+        array.splice(0, 1)
+        return array
+    },
+    take: function(array, n) {
+        if (n == undefined) {
+            n = 1
+        }
+        if (n > array.length) {
+            n = array.length
+        }
+        var takeArr = []
+        for (var i = 0; i < n; i++) {
+            takeArr.push(array[i])
+        }
+        return takeArr
+    },
+    takeRight: function(array, n) {
+        if (n == undefined) {
+            n = 1
+        }
+        if (n > array.length) {
+            n = array.length
+        }
+        var takeArr = []
+        for (var i = 0; i < n; i++) {
+            takeArr.unshift(array[array.length - i - 1])
+        }
+        return takeArr
+    },
+    union: function() {
+        var newArr = []
+        var joinArr = WangYuLong.flatten(arguments)
+        for (var i = 0; i < joinArr.length; i++) {
+            for (j = i + 1; j < joinArr.length; j++) {
+                if (joinArr[i] == joinArr[j]) {
+                    joinArr[j] = null
+                }
+            }
+        }
+        for (var i = 0; i < joinArr.length; i++) {
+            if (joinArr[i] != undefined) {
+                newArr.push(joinArr[i])
+            }
+        }
+        return newArr
+    },
+    uniq: function(array) {
+        var newArr = []
+        for (var i = 0; i < array.length; i++) {
+            for (j = i + 1; j < array.length; j++) {
+                if (array[i] == array[j]) {
+                    array[j] = null
+                }
+            }
+        }
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] != undefined) {
+                newArr.push(array[i])
+            }
+        }
+        return newArr
+    },
+    unzip: function() {
+        var len = arguments[0][0].length
+        var unZipArr = new Array(len)
+        for (var i = 0; i < unZipArr.length; i++) {
+            unZipArr[i] = []
+        }
+        for (var j = 0; j < len; j++) {
+            unZipArr[j][0] = arguments[0][0][j]
+            unZipArr[j][1] = arguments[0][1][j]
+        }
+        return unZipArr
+    },
+    without: function() {
+        var newArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            var tOrF = true
+            for (var j = 1; j < arguments.length; j++) {
+                if (arguments[0][i] == arguments[j]) {
+                    tOrF = false
+                }
+            }
+            if (tOrF) {
+                newArr.push(arguments[0][i])
+            }
+        }
+        return newArr
+    },
+    xor: function() {
+        var newArr = []
+        var sameArr = []
+        var lastArr = []
+        for (var i = 0; i < arguments.length; i++) {
+            newArr.push(arguments[i])
+        }
+        newArr = WangYuLong.flatten(newArr)
+        for (var i = 0; i < newArr.length; i++) {
+            for (var j = i + 1; j < newArr.length; j++) {
+                if (newArr[i] == newArr[j]) {
+                    sameArr.push(newArr[i])
+                }
+            }
+        }
+        for (var i = 0; i < newArr.length; i++) {
+            var tOrF = true
+            for (var j = 0; j < sameArr.length; j++) {
+                if (newArr[i] == sameArr[j]) {
+                    tOrF = false
+                }
+            }
+            if (tOrF) {
+                lastArr.push(newArr[i])
+            }
+        }
+        return lastArr
+    },
+    zip: function() {
+        var zipArr = [
+            [],
+            []
+        ]
+        for (var i = 0; i < arguments.length; i++) {
+            zipArr[0][i] = arguments[i][0]
+            zipArr[1][i] = arguments[i][1]
+        }
+        return zipArr
+    },
+    head: function(array) {
+        return array[0]
+    },
+    indexOf: function(array, value, from) {
+        if (from == undefined) {
+            from = 0
+        }
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] == value && i >= from) {
+                return i
+            }
+        }
+    },
+    join: function(array, string) {
+        if (string == undefined) {
+            string = ','
+        }
+        array = array.join(string)
+        return array
+    },
+    last: function(array) {
+        return array[array.length - 1]
+    },
+    split: function(string, separator, limit) {
+        var array = string.split(separator)
+        array.splice(limit, array.length - limit)
+        return array
+    },
+    lastIndexOf: function(array, value, from) {
+        array = WangYuLong.reverse(array)
+        var index = WangYuLong.indexOf(array, value, from)
+        return array.length - index
+    },
+    nth: function(array, n) {
+        if (n == undefined) {
+            n = 0
+        }
+        if (n < 0) {
+            n = array.length + n
+        }
+        return array[n]
     },
 }
