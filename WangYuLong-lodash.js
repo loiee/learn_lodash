@@ -436,18 +436,4 @@ var WangYuLong = {
             return false
         }
     },
-    escape: function(string) {
-        var strArr = string.split('')
-        for (var i = 0; i < strArr.length; i++) {
-            if (strArr[i].charCodeAt() >= 232 && strArr[i].charCodeAt() <= 235) {
-                strArr[i] = String.fromCharCode(101)
-            }
-            if (strArr[i].charCodeAt() >= 224 && strArr[i].charCodeAt() <= 229) {
-                strArr[i] = String.fromCharCode(97)
-            } //未完全实现...
-
-        }
-        var deb = strArr.join('')
-        return deb
-    }
 }
