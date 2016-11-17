@@ -362,7 +362,7 @@ var WangYuLong = {
     lastIndexOf: function(array, value, from) {
         array = WangYuLong.reverse(array)
         var index = WangYuLong.indexOf(array, value, from)
-        return array.length - index
+        return array.length - index - 1
     },
     nth: function(array, n) {
         if (n == undefined) {
@@ -372,5 +372,22 @@ var WangYuLong = {
             n = array.length + n
         }
         return array[n]
+    },
+    camelCase: function(string) {
+        var array = string.split('-')
+        array = WangYuLong.compact(array)
+        var remove1 = array.join(' ')
+        array = remove1.split('_')
+        array = WangYuLong.compact(array)
+        var remove2 = array.join(' ')
+        remove2 = remove2.toLowerCase()
+        var lastArr = remove2.split(' ') //['foo','bar']
+        for (i = 1; i < lastArr.length; i++) {
+            var singleWordArr = lastArr[i].split('') //['b','a','r']
+            singleWordArr[0] = singleWordArr[0].toUpperCase() //['B','a','r']
+            lastArr[i] = singleWordArr.join('') //'Bar'
+        }
+        var camel = lastArr.join('')
+        return camel
     },
 }
