@@ -390,4 +390,21 @@ var WangYuLong = {
         var camel = lastArr.join('')
         return camel
     },
+    repeat: function(string, n) {
+        if (n == undefined) {
+            n = 1
+        }
+        var newStr = ''
+        for (var i = 0; i < n; i++) {
+            newStr = newStr + string
+        }
+        return newStr
+    },
+    capitalize: function(string) {
+        string = string.toLowerCase()
+        var wordArr = string.split('')
+        wordArr[0] = wordArr[0].toUpperCase() //['B','a','r']
+        var cap = wordArr.join('') //'Bar'
+        return cap
+    },
 }
