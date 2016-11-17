@@ -436,4 +436,36 @@ var WangYuLong = {
             return false
         }
     },
+    escape: function(string) {
+        var strArr = string.split('')
+        for (var i = 0; i < strArr.length; i++) {
+            if (strArr[i] == '&') {
+                strArr[i] = '&amp;'
+            }
+            if (strArr[i] == '<') {
+                strArr[i] = '&lt;'
+            }
+            if (strArr[i] == '>') {
+                strArr[i] = '&gt;'
+            }
+            if (strArr[i] == '"') {
+                strArr[i] = '&quot;'
+            }
+            if (strArr[i] == '\'') {
+                strArr[i] = '&apos;'
+            }
+        }
+        var esc = strArr.join('')
+        return esc
+    },
+    escapeRegExp: function(string) {
+        var strArr = string.split('')
+        for (var i = 0; i < strArr.length; i++) {
+            if (strArr[i] == "^" || strArr[i] == "$" || strArr[i] == "" || strArr[i] == "." || strArr[i] == "*" || strArr[i] == "+" || strArr[i] == "?" || strArr[i] == "(" || strArr[i] == ")" || strArr[i] == "[" || strArr[i] == "]" || strArr[i] == "{" || strArr[i] == "}" || strArr[i] == "|") {
+                strArr[i] = '\\' + strArr[i]
+            }
+        }
+        var escR = strArr.join('')
+        return escR
+    },
 }
