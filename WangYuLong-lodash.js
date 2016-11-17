@@ -196,13 +196,11 @@ var WangYuLong = {
         return newArr
     },
     reverse: function(array) {
-        var counter = 0
-        for (var i = 0; counter < array.length; i = 0) {
-            array.push(array[i])
-            array.splice(0, 1)
-            counter++
+        var newArr = []
+        for (var i = 0; i < array.length; i++) {
+            newArr.unshift(array[i])
         }
-        return array
+        return newArr
     },
     tail: function(array) {
         array.splice(0, 1)
