@@ -468,4 +468,16 @@ var WangYuLong = {
         var escR = strArr.join('')
         return escR
     },
+    kebabCase: function(string) {
+        var array = string.split('-')
+        array = WangYuLong.compact(array)
+        var remove1 = array.join(' ')
+        array = remove1.split('_')
+        array = WangYuLong.compact(array)
+        var remove2 = array.join(' ')
+        remove2 = remove2.toLowerCase()
+        var lastArr = remove2.split(' ') //['foo','Bar']
+        var kebab = lastArr.join('-')
+        return kebab
+    },
 }
