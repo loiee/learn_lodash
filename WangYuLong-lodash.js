@@ -591,4 +591,183 @@ var WangYuLong = {
         }
         return lastResult
     },
+    lowerCase: function(string) {
+        var array = string.split('-')
+        array = WangYuLong.compact(array)
+        var remove1 = array.join(' ')
+        array = remove1.split('_')
+        array = WangYuLong.compact(array)
+        var remove2 = array.join('-')
+        var lastArr = remove2.split(' ') //['foo','Bar']
+        var lower = lastArr.join('-')
+        var testArr = lower.split('')
+        for (var i = 0; i < testArr.length; i++) {
+            if (testArr[i] == '-') {
+                lower = lower.split('-').join(' ').toLowerCase()
+                return lower
+            }
+        }
+        for (var j = 1; j < testArr.length; j++) {
+            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
+                testArr[j] = [' ' + testArr[j]]
+            }
+        }
+        lower = testArr.join('').toLowerCase()
+        return lower
+    },
+    lowerFirst: function(string) {
+        var strArr = string.split('')
+        strArr[0] = strArr[0].toLowerCase()
+        var result = strArr.join('')
+        return result
+    },
+    /*
+     *用指定字符串拼接达到指定长度
+     *_.pad('abc', 8);
+     * => '  abc   '
+     *_.pad('abc', 8, '_-');
+     * => '_-abc_-_'
+     *_.pad('abc', 3);
+     * => 'abc'
+     */
+    pad: function(string, length, chars) {
+        if (chars == undefined) {
+            chars = ' '
+        }
+        var before = parseInt((length - string.length) / 2)
+        var after = length - string.length - before
+        var stringBefore = ''
+        var stringAfter = ''
+        for (var i = 0; i < before; i++) {
+            stringBefore = stringBefore + chars.charAt(i % chars.length)
+        }
+        for (var i = 0; i < after; i++) {
+            stringAfter = stringAfter + chars.charAt(i % chars.length)
+        }
+        return stringBefore + string + stringAfter
+    },
+    padEnd: function(string, length, chars) {
+        if (chars == undefined) {
+            chars = ' '
+        }
+        var after = length - string.length
+        var stringAfter = ''
+        for (var i = 0; i < after; i++) {
+            stringAfter = stringAfter + chars.charAt(i % chars.length)
+        }
+        return string + stringAfter
+    },
+    padStart: function(string, length, chars) {
+        if (chars == undefined) {
+            chars = ' '
+        }
+        var before = length - string.length
+        var stringBefore = ''
+        for (var i = 0; i < before; i++) {
+            stringBefore = stringBefore + chars.charAt(i % chars.length)
+        }
+        return stringBefore + string
+    },
+    /**
+     *字符串取整数部分
+     *以radix参数为基数，若为0或undefined，默认为10进制
+     */
+    parseInt: function(string, radix) { //radix为进制，默认10进制
+        string = String(string)
+        if (radix == 0 || radix == undefined) {
+            radix = 10 //若未输入进制或输入0，默认10进制
+        }
+        var result = 0
+        for (var i = string.length - 1; i >= 0; i--) {
+            result = result + Number(string.charAt(i)) * Math.pow(radix, string.length - i - 1)
+        }
+        return result
+    },
+    replace: function(string, pattern, replacement) {
+        var len = pattern.length
+        var counter = 0
+        for (var i = 0; i < string.length; i++) {
+            var counterPattern = 0
+            var match = true //匹配对应的字符
+            for (var j = counter; len--; j++) {
+                if (string.charAt(j) != pattern.charAt(counterPattern)) {
+                    match = false
+                    break
+                }
+                counterPattern++
+            }
+            if (match) {
+                break
+            }
+            counter++
+        }
+        var stringBefore = ''
+        var stringAfter = ''
+        for (var k = 0; k < i; k++) {
+            stringBefore += string.charAt(k) //pattern前面部分
+        }
+        for (var m = i + pattern.length; m < string.length; m++) {
+            stringAfter += string.charAt(m) //pattern后面部分
+        }
+        return stringBefore + replacement + stringAfter
+    },
+    normalCase: function(string) {
+        var array = string.split('-')
+        array = WangYuLong.compact(array)
+        var remove1 = array.join(' ')
+        array = remove1.split('_')
+        array = WangYuLong.compact(array)
+        var remove2 = array.join('-')
+        var lastArr = remove2.split(' ') //['foo','Bar']
+        var normal = lastArr.join('-')
+        var testArr = normal.split('')
+        for (var i = 0; i < testArr.length; i++) {
+            if (testArr[i] == '-') {
+                normal = normal.split('-').join(' ')
+                return normal
+            }
+        }
+        for (var j = 1; j < testArr.length; j++) {
+            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
+                testArr[j] = [' ' + testArr[j]]
+            }
+        }
+        normal = testArr.join('')
+        return normal
+    },
+    startCase: function(string) {
+        string = WangYuLong.normalCase(string) //foo Bar
+        var strArr = string.split(' ') //[foo,Bar]
+        for (var i = 0; i < strArr.length; i++) {
+            strArr[i] = strArr[i].split('') //[f,o,o]
+            strArr[i][0] = strArr[i][0].toUpperCase() //[F,o,o]
+            strArr[i] = strArr[i].join('') //[Foo]
+        }
+        string = strArr.join(' ')
+        return string
+    },
+    snakeCase: function(string) {
+        var array = string.split('-')
+        array = WangYuLong.compact(array)
+        var remove1 = array.join(' ')
+        array = remove1.split('_')
+        array = WangYuLong.compact(array)
+        var remove2 = array.join('-')
+        var lastArr = remove2.split(' ') //['foo','Bar']
+        var kebab = lastArr.join('_')
+        var testArr = kebab.split('')
+        for (var i = 0; i < testArr.length; i++) {
+            if (testArr[i] == '_') {
+                kebab = kebab.toLowerCase()
+                return kebab
+            }
+        }
+        for (var j = 1; j < testArr.length; j++) {
+            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
+                testArr[j] = ['_' + testArr[j]]
+            }
+        }
+        kebab = testArr.join('').toLowerCase()
+        return kebab
+    },
 }
