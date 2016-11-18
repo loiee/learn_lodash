@@ -480,4 +480,11 @@ var WangYuLong = {
         var kebab = lastArr.join('-')
         return kebab
     },
+    map: function(collection, iteratee) {
+        var newArr = []
+        for (var i = 0; i < collection.length; i++) {
+            newArr.push(iteratee(collection[i]))
+        }
+        return newArr
+    },
 }
