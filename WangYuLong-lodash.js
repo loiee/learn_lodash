@@ -572,4 +572,23 @@ var WangYuLong = {
         }
         return newArr
     },
+    at: function(object, paths) {
+        var result = []
+        var lastResult = []
+        for (var i = 0; i < paths.length; i++) {
+            var point = paths[i].split('')
+            var pure = []
+            for (var j = 0; j < point.length; j++) { //去[]和.
+                if (point[j] != '[' && point[j] != ']' && point[j] != '.') {
+                    pure.push([point[j]]) //[[a],[0],[b],[c]]
+                }
+            }
+            var result = object
+            for (var k = 0; k < pure.length; k++) {
+                result = result[pure[k]]
+            }
+            lastResult.push(result)
+        }
+        return lastResult
+    },
 }
