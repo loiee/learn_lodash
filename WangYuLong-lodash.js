@@ -530,4 +530,25 @@ var WangYuLong = {
         }
         return newArr
     },
+    /**
+     *检查给定参数的所有元素是否满足断定条件，若都满足，返回true，否则返回false
+     *参数 collection，参与迭代的数组/对象
+     *返回值 true/false
+     *例：_.every([true, 1, null, 'yes'], Boolean); 返回=> false
+     */
+    every: function(collection, predicate) {
+        for (var i = 0; i < collection.length; i++) {
+            if (!predicate(collection[i])) {
+                return false
+            }
+        }
+        return true
+    },
+    reduce: function(array, func, initial) {
+        result = func(initial, array[0])
+        for (var i = 1; i < array.length; i++) {
+            result = func(result, array[i])
+        }
+        return result
+    },
 }
