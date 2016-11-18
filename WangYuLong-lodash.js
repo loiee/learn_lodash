@@ -104,11 +104,11 @@ var WangYuLong = {
     },
     flattenDeep: function(array) {
         for (var i = 1;; i++) {
-            var tOrF = true
-            array = WangYuLong.flatten(array)
+            var tOrF = true //重置判定条件
+            array = WangYuLong.flatten(array) //对自己降维
             for (var j = 0; j < array.length; j++) {
-                if (array[j][0] != undefined) {
-                    tOrF = false
+                if (array[j][0]) {
+                    tOrF = false //判断是否是一维数组
                 }
             }
             if (tOrF) {
