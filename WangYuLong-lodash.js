@@ -483,8 +483,39 @@ var WangYuLong = {
     map: function(collection, iteratee) {
         var newArr = []
         for (var i = 0; i < collection.length; i++) {
-            newArr.push(iteratee(collection[i]))
+            newArr.push(iteratee(collection[i], i, collection))
         }
+        return newArr
+    },
+    sortedIndex: function(array, value) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] >= value) {
+                return i
+            }
+        }
+    },
+    filter: function(collection, fn) {
+        var newArr = []
+        for (var i = 0; i < collection.length; i++) {
+            if (fn(collection(i), i, collection) == true) {
+                newArr.push(collection(i))
+            }
+        }
+        return newArr
+    },
+    partition: function(collection, fn) {
+        var tArr = []
+        var fArr = []
+        var newArr = [0, 1]
+        for (var i = 0; i < collection.length; i++) {
+            if (fn(collection[i], i, collection) == true) {
+                tArr.push(collection[i])
+            } else if (fn(collection[i], i, collection) == false) {
+                fArr.push(collection[i])
+            }
+        }
+        newArr[0] = tArr
+        newArr[1] = fArr
         return newArr
     },
 }
