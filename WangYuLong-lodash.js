@@ -474,10 +474,23 @@ var WangYuLong = {
         var remove1 = array.join(' ')
         array = remove1.split('_')
         array = WangYuLong.compact(array)
-        var remove2 = array.join(' ')
-        remove2 = remove2.toLowerCase()
+        var remove2 = array.join('-')
+            //remove2 = remove2.toLowerCase()
         var lastArr = remove2.split(' ') //['foo','Bar']
         var kebab = lastArr.join('-')
+        var testArr = kebab.split('')
+        for (var i = 0; i < testArr.length; i++) {
+            if (testArr[i] == '-') {
+                kebab = kebab.toLowerCase()
+                return kebab
+            }
+        }
+        for (var j = 1; j < testArr.length; j++) {
+            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
+                testArr[j] = ['-' + testArr[j]]
+            }
+        }
+        kebab = testArr.join('').toLowerCase()
         return kebab
     },
     map: function(collection, iteratee) {
@@ -504,18 +517,17 @@ var WangYuLong = {
         return newArr
     },
     partition: function(collection, fn) {
-        var tArr = []
-        var fArr = []
-        var newArr = [0, 1]
+        var newArr = [
+            [],
+            []
+        ]
         for (var i = 0; i < collection.length; i++) {
-            if (fn(collection[i], i, collection) == true) {
-                tArr.push(collection[i])
-            } else if (fn(collection[i], i, collection) == false) {
-                fArr.push(collection[i])
+            if (fn(collection[i], i, collection)) {
+                newArr[0].push(collection[i])
+            } else {
+                newArr[1].push(collection[i])
             }
         }
-        newArr[0] = tArr
-        newArr[1] = fArr
         return newArr
     },
 }
