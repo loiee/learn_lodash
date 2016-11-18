@@ -545,10 +545,31 @@ var WangYuLong = {
         return true
     },
     reduce: function(array, func, initial) {
-        result = func(initial, array[0])
+        if (initial == undefined) {
+            var result = array[0]
+        } else {
+            result = func(initial, array[0])
+        }
         for (var i = 1; i < array.length; i++) {
             result = func(result, array[i])
         }
         return result
+    },
+    some: function(collection, predicate) {
+        for (var i = 0; i < collection.length; i++) {
+            if (predicate(collection[i])) {
+                return true
+            }
+        }
+        return false
+    },
+    reject: function(collection, fn) {
+        var newArr = []
+        for (var i = 0; i < collection.length; i++) {
+            if (fn(collection[i], i, collection) == false) {
+                newArr.push(collection[i])
+            }
+        }
+        return newArr
     },
 }
