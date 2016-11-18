@@ -497,8 +497,8 @@ var WangYuLong = {
     filter: function(collection, fn) {
         var newArr = []
         for (var i = 0; i < collection.length; i++) {
-            if (fn(collection(i), i, collection) == true) {
-                newArr.push(collection(i))
+            if (fn(collection[i], i, collection) == true) {
+                newArr.push(collection[i])
             }
         }
         return newArr
