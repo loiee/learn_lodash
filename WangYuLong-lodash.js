@@ -537,12 +537,38 @@ var WangYuLong = {
      *例：_.every([true, 1, null, 'yes'], Boolean); 返回=> false
      */
     every: function(collection, predicate) {
-        for (var i = 0; i < collection.length; i++) {
-            if (!predicate(collection[i])) {
-                return false
+        if (typeof(predicate) == 'function') {
+            for (var key in collection) {
+                if (!predicate(collection[key], key, collection)) {
+                    return false
+                }
             }
+            return true
+        } else {
+            if (Array.isArray(predicate)) { //如果是数组，转化为对象
+                var predicateToObj = {}
+                for (var i = 0; i < predicate.length; i = i + 2) {
+                    predicateToObj[predicate[i]] = predicate[i + 1]
+                }
+                predicate = predicateToObj
+            }
+            if (typeof(predicate) == 'string') {
+                for (var j = 0; j < collection.length; j++) {
+                    if (collection[j][predicate] == false) {
+                        return false
+                    }
+                }
+                return true
+            }
+            for (var key in predicate) {
+                for (var j = 0; j < collection.length; j++) {
+                    if (predicate[key] != collection[j][key]) {
+                        return false
+                    }
+                }
+            }
+            return true
         }
-        return true
     },
     reduce: function(array, func, initial) {
         if (initial == undefined) {
