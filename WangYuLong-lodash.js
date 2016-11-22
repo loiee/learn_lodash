@@ -1199,4 +1199,50 @@ var WangYuLong = {
         }
         return newArr
     },
+    unionBy: function(arr1, arr2, func) {
+        if (typeof(func) == 'string') {
+            var functer = function(o) {
+                return o[func]
+            }
+        } else {
+            functer = func
+        }
+        var newArr = [arr1[0]]
+        var sumArr = WangYuLong.union(arr1, arr2)
+        for (var i = 0; i < sumArr.length; i++) {
+            var add = true
+            for (var j = 0; j < newArr.length; j++) {
+                if (functer(sumArr[i]) == functer(newArr[j])) {
+                    add = false
+                }
+            }
+            if (add) {
+                newArr.push(sumArr[i])
+            }
+        }
+        return newArr
+    },
+    unionWith: function(arr1, arr2, func) {
+        var newArr = [arr1[0]]
+        var sumArr = WangYuLong.union(arr1, arr2)
+        for (var i = 0; i < sumArr.length; i++) {
+            var add = true
+            for (var j = 0; j < newArr.length; j++) {
+                if (func(sumArr[i], newArr[j])) {
+                    add = false
+                }
+            }
+            if (add) {
+                newArr.push(sumArr[i])
+            }
+        }
+        return newArr
+    },
+    unzipWith: function(arr, func) {
+        var newArr = []
+        for (var i = 0; i < arr[0].length; i++) {
+            newArr.push(func(arr[0][i], arr[1][i]))
+        }
+        return newArr
+    },
 }
