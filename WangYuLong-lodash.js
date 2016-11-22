@@ -116,6 +116,15 @@ var WangYuLong = {
             }
         }
     },
+    flattenDepth: function(array, depth) {
+        if (depth == undefined) {
+            depth = 1
+        }
+        for (var i = 1; i <= depth; i++) {
+            array = WangYuLong.flatten(array)
+        }
+        return array
+    },
     fromPairs: function(pairs) {
         var newObj = {}
         for (var i = 0; i < pairs.length; i++) {
@@ -885,6 +894,308 @@ var WangYuLong = {
 
         for (var key in object) {
             newArr.push(key)
+        }
+        return newArr
+    },
+    dropWhile: function(array, func) {
+        var newArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            newArr.push(arguments[0][i])
+        }
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        for (var i = 0; i < array.length; i++) {
+            if (functer(newArr[0]) == false || functer(newArr[0]) == undefined) {
+                return newArr
+            } else {
+                newArr.splice(0, 1)
+            }
+        }
+        return newArr
+    },
+    dropRightWhile: function(array, func) {
+        var newArr = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            newArr.push(arguments[0][i])
+        }
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        for (var i = array.length; i >= 0; i--) {
+            if (functer(newArr[newArr.length - 1]) == false || functer(newArr[newArr.length - 1]) == undefined) {
+                return newArr
+            } else {
+                newArr.pop()
+            }
+        }
+        return newArr
+    },
+    findIndex: function(array, func, index) {
+        if (index == undefined) {
+            index = 0
+        }
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        for (var i = index; i < array.length; i++) {
+            if (functer(array[i])) {
+                return i
+            }
+        }
+    },
+    findLastIndex: function(array, func, index) {
+        if (index == undefined) {
+            index = array.length - 1
+        }
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        for (var i = index; i >= 0; i--) {
+            if (functer(array[i])) {
+                return i
+            }
+        }
+    },
+    intersectionBy: function() {
+        var func = arguments[arguments.length - 1]
+        var newArr = []
+        if (typeof(func) == 'string') { //后面为字符串
+            function functer(x) {
+                return x[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+
+        for (var key in arguments[0]) {
+            for (var key2 in arguments[1]) {
+                if (functer(arguments[0][key]) == functer(arguments[1][key2])) {
+                    newArr.push(arguments[0][key])
+                }
+            }
+        }
+        return newArr
+    },
+    intersectionWith: function() {
+        var func = arguments[arguments.length - 1]
+        var newArr = []
+        for (var key in arguments[0]) {
+            for (var key2 in arguments[1]) {
+                if (func(arguments[0][key], arguments[1][key2])) {
+                    newArr.push(arguments[0][key])
+                }
+            }
+        }
+        return newArr
+    },
+    pullAllBy: function(array1, array2, iteratee) {
+        if (typeof(iteratee) == 'string') {
+            var functer = function(o) {
+                return o[iteratee]
+            }
+        }
+        var newArr = []
+        for (var key in array1) {
+            var pull = false
+            for (var key2 in array2) {
+                if (functer(array1[key]) == functer(array2[key2])) {
+                    pull = true
+                }
+            }
+            if (!pull) {
+                newArr.push(array1[key])
+            }
+        }
+        return newArr
+    },
+    pullAllWith: function(array1, array2, functer) {
+        var newArr = []
+        for (var key in array1) {
+            var pull = false
+            for (var key2 in array2) {
+                if (!functer(array1[key], array2[key2])) {
+                    newArr.push(array1[key])
+                }
+            }
+        }
+        return newArr
+    },
+    sortedIndexBy: function(array, value, func) {
+        if (typeof(func) == 'string') {
+            var functer = function(o) {
+                return o[func]
+            }
+        } else {
+            functer = func
+        }
+        for (var key in array) {
+            if (functer(array[key]) == functer(value)) {
+                return key
+            }
+        }
+    },
+    sortedIndexOf: function(array, value) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                return i
+            }
+        }
+    },
+    sortedLastIndex: function(array, value) {
+        for (var i = array.length; i >= 0; i--) {
+            if (array[i] == value) {
+                return i + 1
+            }
+        }
+    },
+    sortedLastIndexBy: function(array, value, func) {
+        if (typeof(func) == 'string') {
+            var functer = function(o) {
+                return o[func]
+            }
+        } else {
+            functer = func
+        }
+        for (var i = array.length - 1; i >= 0; i--) {
+            if (functer(array[i]) == functer(value)) {
+                return i + 1
+            }
+        }
+    },
+    sortedLastIndexOf: function(array, value) {
+        for (var i = array.length - 1; i >= 0; i--) {
+            if (array[i] == value) {
+                return i
+            }
+        }
+    },
+    sortedUniq: function(array) {
+        var newArr = []
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] != array[i - 1]) {
+                newArr.push(array[i])
+            }
+        }
+        return newArr
+    },
+    sortedUniqBy: function(array, func) {
+        var newArr = []
+        for (var i = 0; i < array.length; i++) {
+            if (func(array[i]) != func(array[i - 1])) {
+                newArr.push(array[i])
+            }
+        }
+        return newArr
+    },
+    takeRightWhile: function(array, func) {
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        var newArr = []
+        for (i = array.length - 1; i >= 0; i--) {
+            if (!functer(array[i])) {
+                return newArr
+            }
+            if (functer(array[i])) {
+                newArr.unshift(array[i])
+            }
         }
         return newArr
     },
