@@ -796,4 +796,96 @@ var WangYuLong = {
         kebab = testArr.join('').toLowerCase()
         return kebab
     },
+    includes: function(collection, value, fromIndex) {
+        if (fromIndex == undefined) {
+            fromIndex = 0
+        }
+        var string = ''
+        value = String(value)
+        for (var key in collection) {
+            string += collection[key]
+        }
+        for (var i = fromIndex; i < string.length; i++) {
+            var reset = 0
+            var match = true
+            var k = i
+            for (var j = reset; j < value.length; j++) {
+                if (string[k] != value[j]) {
+                    match = false
+                }
+                reset++
+                k++
+            }
+            if (match) {
+                return true
+            }
+        }
+        return false
+    },
+    differenceBy: function() {
+        var func = arguments[arguments.length - 1]
+        var newArr = []
+        if (typeof(func) == 'string') { //后面为字符串
+            function objFunc(x) {
+                return x[func]
+            }
+            for (var key in arguments[0]) {
+                newArr[key] = (arguments[0][key])
+            }
+
+            for (var key in arguments[0]) {
+                for (var i = 1; i < arguments.length - 1; i++) {
+                    for (var j = 0; j < arguments[i].length; j++) {
+                        if (objFunc(arguments[0][key]) == objFunc(arguments[i][j])) {
+                            newArr.splice(key, 1)
+                        }
+                    }
+                }
+            }
+            return newArr
+
+        } else { //后面为函数
+
+
+            for (var i = 0; i < arguments[0].length; i++) {
+                newArr.push(arguments[0][i])
+            }
+            for (var j = 0; j < arguments[0].length; j++) {
+                for (var k = 1; k < arguments.length - 1; k++) {
+                    for (var m = 0; m < arguments[k].length; m++) {
+                        if (func(arguments[0][j]) == func(arguments[k][m])) {
+                            newArr.splice(j, 1)
+                        }
+                    }
+                }
+            }
+            return newArr
+        }
+    },
+    differenceWith: function() {
+        var newArr = []
+        var func = arguments[arguments.length - 1]
+        for (var key in arguments[0]) {
+            newArr.push(arguments[0][key])
+            for (var i = 1; i < arguments.length - 1; i++) {
+                for (var j = 0; j < arguments[i].length; j++) {
+                    if (func(arguments[0][key], arguments[i][j])) {
+                        newArr.pop(arguments[0][key])
+                    }
+                }
+            }
+        }
+        return newArr
+    },
+    keys: function(object) {
+        var newArr = []
+        if (typeof(object) == 'string') {
+            object = object.split('')
+        }
+
+        for (var key in object) {
+            newArr.push(key)
+        }
+        return newArr
+    },
 }
