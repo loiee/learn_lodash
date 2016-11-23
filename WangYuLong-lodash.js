@@ -1245,4 +1245,77 @@ var WangYuLong = {
         }
         return newArr
     },
+    takeWhile: function(array, func) {
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        var newArr = []
+        for (i = 0; i < array.length; i++) {
+            if (!functer(array[i])) {
+                return newArr
+            }
+            if (functer(array[i])) {
+                newArr.push(array[i])
+            }
+        }
+        return newArr
+    },
+    xorBy: function(arr1, arr2, func) {
+        if (typeof(func) == 'string') {
+            var functer = function(o) {
+                return o[func]
+            }
+        } else {
+            functer = func
+        }
+        var newArr = []
+        var sumArr = WangYuLong.union(arr1, arr2)
+        for (var i = 0; i < sumArr.length; i++) {
+            var add = true
+            for (var j = 0; j < sumArr.length; j++) {
+                if (i != j && functer(sumArr[i]) == functer(sumArr[j])) {
+                    add = false
+                }
+            }
+            if (add) {
+                newArr.push(sumArr[i])
+            }
+        }
+        return newArr
+    },
+    xorWith: function(arr1, arr2, func) {
+        var newArr = []
+        var sumArr = WangYuLong.union(arr1, arr2)
+        for (var i = 0; i < sumArr.length; i++) {
+            var add = true
+            for (var j = 0; j < sumArr.length; j++) {
+                if (i != j && func(sumArr[i], sumArr[j])) {
+                    add = false
+                }
+            }
+            if (add) {
+                newArr.push(sumArr[i])
+            }
+        }
+        return newArr
+    },
 }
