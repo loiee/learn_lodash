@@ -1106,9 +1106,9 @@ var WangYuLong = {
         } else {
             functer = func
         }
-        for (var key in array) {
-            if (functer(array[key]) == functer(value)) {
-                return key
+        for (var i = 0; i < array.length; i++) {
+            if (functer(array[i]) == functer(value)) {
+                return i
             }
         }
     },
