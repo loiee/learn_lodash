@@ -1318,4 +1318,57 @@ var WangYuLong = {
         }
         return newArr
     },
+    after: function(num, func) {
+        var runingTimes = 0
+        return function() {
+            runingTimes++
+            if (runingTimes > num) {
+                return func.apply(null, arguments)
+            }
+        }
+    },
+    before: function(num, func) {
+        var runingTimes = 0
+        return function() {
+            runingTimes++
+            if (runingTimes < num) {
+                var lastResult = func(arg)
+                return lastResult
+            } else {
+                return lastResult
+            }
+        }
+    },
+    matches: function(source) {
+        return function(obj) {
+            for (var key in source) {
+                if (!WangYuLong.isEqual(source[key], obj[key])) {
+                    return false
+                }
+            }
+            return true
+        }
+    },
+    isEqual: function(a, b) {
+        if (a != a && b != b) {
+            return true
+        }
+        if (typeof a != typeof b) {
+            return false
+        }
+        if (a !== b && typeof a != 'object') {
+            return false
+        }
+        for (var key in a) {
+            if (!WangYuLong.isEqual(a[key], b[key])) {
+                return false
+            }
+        }
+        for (var key in b) {
+            if (!WangYuLong.isEqual(a[key], b[key])) {
+                return false
+            }
+        }
+        return true
+    },
 }
