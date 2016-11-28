@@ -516,10 +516,32 @@ var WangYuLong = {
             }
         }
     },
-    filter: function(collection, fn) {
+    filter: function(collection, func) {
         var newArr = []
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
         for (var i = 0; i < collection.length; i++) {
-            if (fn(collection[i], i, collection) == true) {
+            if (functer(collection[i], i, collection) == true) {
                 newArr.push(collection[i])
             }
         }
@@ -1370,5 +1392,23 @@ var WangYuLong = {
             }
         }
         return true
+    },
+    arrayToLinkedList: function(a) {
+        if (a.length < 1) {
+            return {
+                next: null
+            }
+        }
+        var result = {
+            value: a[a.length - 1],
+            next: null
+        }
+        for (var i = a.length - 2; i >= 0; i--) {
+            var temp = result
+            result = {}
+            result.value = a[i]
+            result.next = temp
+        }
+        return result
     },
 }
