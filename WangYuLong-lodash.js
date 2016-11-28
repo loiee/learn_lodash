@@ -1409,6 +1409,8 @@ var WangYuLong = {
             result.value = a[i]
             result.next = temp
         }
-        return result
+        return {
+            next: result
+        }
     },
 }
