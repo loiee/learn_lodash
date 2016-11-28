@@ -504,8 +504,15 @@ var WangYuLong = {
     },
     map: function(collection, iteratee) {
         var newArr = []
-        for (var i = 0; i < collection.length; i++) {
-            newArr.push(iteratee(collection[i], i, collection))
+        if (typeof iteratee == 'string') {
+            var f = function(x) {
+                return x[iteratee]
+            }
+        } else {
+            var f = iteratee
+        }
+        for (var key in collection) {
+            newArr.push(f(collection[key], key, collection))
         }
         return newArr
     },
@@ -547,13 +554,35 @@ var WangYuLong = {
         }
         return newArr
     },
-    partition: function(collection, fn) {
+    partition: function(collection, func) {
         var newArr = [
             [],
             []
         ]
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
         for (var i = 0; i < collection.length; i++) {
-            if (fn(collection[i], i, collection)) {
+            if (functer(collection[i], i, collection)) {
                 newArr[0].push(collection[i])
             } else {
                 newArr[1].push(collection[i])
@@ -601,14 +630,29 @@ var WangYuLong = {
             return true
         }
     },
-    reduce: function(array, func, initial) {
-        if (initial == undefined) {
-            var result = array[0]
-        } else {
-            result = func(initial, array[0])
-        }
-        for (var i = 1; i < array.length; i++) {
-            result = func(result, array[i])
+    reduce: function(collection, func, initial) {
+        if (Array.isArray(collection)) {
+            if (initial == undefined) {
+                var result = collection[0]
+            } else {
+                result = func(initial, collection[0], 0, collection)
+            }
+            for (var i = 1; i < collection.length; i++) {
+                result = func(result, collection[i], i, collection)
+            }
+        } else if (typeof collection == 'object') {
+            var flag = true
+            for (var key in collection) {
+                if (initial == undefined) {
+                    initial = {}
+                }
+                if (flag) {
+                    var result = func(initial, collection[key], key, collection)
+                } else {
+                    var result = func(result, collection[key], key, collection)
+                }
+                flag = false
+            }
         }
         return result
     },
@@ -1393,6 +1437,243 @@ var WangYuLong = {
         }
         return true
     },
+    uniqBy: function(arr, func) {
+        if (typeof(func) == 'string') {
+            var functer = function(o) {
+                return o[func]
+            }
+        } else {
+            functer = func
+        }
+        var obj = {},
+            newArr = []
+        for (var i = 0; i < arr.length; i++) {
+            if (!obj[functer(arr[i])]) {
+                newArr.push(arr[i])
+                obj[functer(arr[i])] = true
+            }
+        }
+        return newArr
+    },
+    uniqWith: function(arr, func) {
+
+        var newArr = [arr[0]],
+            flag = true
+        for (var i = 1; i < arr.length; i++) {
+            for (var j = 0; j < newArr.length; j++) {
+                if (func(arr[i], newArr[j])) {
+                    flag = false
+                }
+            }
+            if (flag) {
+                newArr.push(arr[i])
+            }
+        }
+        return newArr
+    },
+    zipObject: function(arr1, arr2) {
+        var obj = {}
+        for (var i = 0; i < arr1.length; i++) {
+            obj[arr1[i]] = arr2[i]
+        }
+        return obj
+    },
+    zipObjectDeep: function(arr1, arr2) {
+        var a = []
+        for (var i = 0; i < arr1.length; i++) {
+            arr1[i] = arr1[i].split('.').reverse().join(' ').split(']').join('').split(' ')
+        }
+        //得到arr1=[ [c,b[0,a] , [d,b[1,a] ]
+        for (var i = 0; i < arr1.length; i++) {
+            var o = {}
+            o[arr1[i][0]] = arr2[i]
+            for (var j = 1; j < arr1[i].length; j++) {
+                arr1[i][j] = arr1[i][j].split('[') //得到arr1=[ [c,[b,0],a] , [d,[b,1],a] ]
+                if (arr1[i][j].length > 1 && i == 0) {
+                    var temp = [o]
+                }
+                if (arr1[i][j].length > 1 && i > 0) {
+                    o = temp.concat(o)
+                }
+                var temp2 = o
+                o = {}
+                o[arr1[i][j][0]] = temp2
+            }
+        }
+        return o
+    },
+    zipWith: function() {
+        var resultArr = []
+        var result = []
+        for (var i = 0; i < arguments[0].length; i++) {
+            resultArr[i] = []
+        }
+        for (var i = 0; i < arguments.length - 1; i++) {
+            for (var j = 0; j < arguments[0].length; j++) {
+                resultArr[j][i] = arguments[i][j]
+            }
+        }
+        for (var i = 0; i < resultArr.length; i++) {
+            result[i] = arguments[arguments.length - 1].apply(null, resultArr[i])
+        }
+        return result
+    },
+    countBy: function(arr, func) {
+        if (typeof func == 'string') {
+            var functer = function(x) {
+                return x[func]
+            }
+        } else {
+            var functer = func
+        }
+        var obj = {}
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = functer(arr[i])
+        }
+
+        for (var i = 0; i < arr.length; i++) {
+            var counter = 1
+            for (var j = i + 1; j < arr.length; j++) {
+                if (arr[j] == arr[i]) {
+                    counter++
+                }
+            }
+            if (arr.indexOf(arr[i]) == i) {
+                obj[arr[i]] = counter
+            }
+        }
+        return obj
+    },
+    find: function(collection, func, index) {
+        if (index == undefined) {
+            index = 0
+        }
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        for (var i = index; i < collection.length; i++) {
+            if (functer(collection[i], i, collection) == true) {
+                return collection[i]
+            }
+        }
+    },
+    findLast: function(collection, func, index) {
+        if (index == undefined) {
+            index = collection.length - 1
+        }
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
+        for (var i = index; i >= 0; i--) {
+            if (functer(collection[i], i, collection) == true) {
+                return collection[i]
+            }
+        }
+    },
+    flatMap: function(arr, func) {
+        var result = func(arr[0])
+        for (var i = 1; i < arr.length; i++) {
+            result = WangYuLong.concat(result, func(arr[i]))
+        }
+        return result
+    },
+    flatMapDeep: function(arr, func) {
+        var result = func(arr[0])
+        for (var i = 1; i < arr.length; i++) {
+            result = WangYuLong.concat(result, func(arr[i]))
+        }
+        return WangYuLong.flattenDeep(result)
+    },
+    flatMapDepth: function(arr, func, depth) {
+        var result = func(arr[0])
+        for (var i = 1; i < arr.length; i++) {
+            result = WangYuLong.concat(result, func(arr[i]))
+        }
+        return WangYuLong.flattenDepth(result, depth - 1)
+    },
+    forEach: function(collection, func) {
+        var newArr = []
+        for (var key in collection) {
+            func(collection[key], key, collection)
+            newArr.push(collection[key])
+        }
+        return newArr
+    },
+    forEachRight: function(collection, func) {
+        var newArr = []
+        for (var key in collection) {
+            func(collection[collection.length - 1 - key], key, collection)
+            newArr.push(collection[key])
+        }
+        return newArr
+    },
+    /*
+    _.groupBy([6.1, 4.2, 6.3], Math.floor);
+     => { '4': [4.2], '6': [6.1, 6.3] }
+     
+     The `_.property` iteratee shorthand.
+    _.groupBy(['one', 'two', 'three'], 'length');
+     => { '3': ['one', 'two'], '5': ['three'] }
+
+    */
+    groupBy: function(collection, func) {
+        if (typeof func == 'string') {
+            functer = function(x) {
+                return x[func]
+            }
+        } else {
+            functer = func
+        }
+        var result = {}
+        var testArr = [] //存放func(collection[key]),得到[6,4,6],用来去重
+        for (var key in collection) {
+            if (testArr.indexOf(functer(collection[key])) < 0) { //如果没有重复
+                result[functer(collection[key])] = [collection[key]]
+            } else { //如果是重复的就push进数组
+                result[functer(collection[key])].push(collection[key])
+            }
+            testArr.push(functer(collection[key]))
+        }
+        return result
+    },
     arrayToLinkedList: function(a) {
         if (a.length < 1) {
             return {
@@ -1412,5 +1693,53 @@ var WangYuLong = {
         return {
             next: result
         }
+    },
+    keyBy: function(collection, func) {
+        if (typeof func == 'string') {
+            var f = function(x) {
+                return x[func]
+            }
+        } else {
+            var f = func
+        }
+        var result = {}
+        for (var key in collection) {
+            result[f(collection[key])] = collection[key]
+        }
+        return result
+    },
+    orderBy: function(collection, func, orders) {
+        if (Array.isArray(func)) {
+            var f = function(x) {
+                var newArr = []
+                for (var i = 0; i < func.length; i++) {
+                    newArr.push(x[func[i]])
+                }
+                return newArr
+            }
+        } //这里只考虑func为数组
+        var valueArr = collection.map(f)
+
+        function valueSort(arr, innerIndex) {
+            //[[A],[B],[C]],对ABC按innerIndex的值排序,需考虑稳定性
+            for (var i = 0; i < arr.length - 1; i++) {
+                for (var j = i + 1; j < arr.length; j++) {
+                    if (arr[i][innerIndex] > arr[j][innerIndex]) {
+                        var t = arr[i]
+                        arr[i] = arr[j]
+                        arr[j] = t
+                    }
+                }
+            }
+            return arr
+        } //函数定义完毕
+        for (var i = orders.length - 1; i >= 0; i--) {
+            if (orders[i] == 'desc') {
+                valueSort(valueArr, i).reverse()
+            } else {
+                valueSort(valueArr, i)
+            }
+        }
+        return valueArr
     },
 }
