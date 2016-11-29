@@ -243,17 +243,12 @@ var WangYuLong = {
     },
     union: function() {
         var newArr = []
-        var joinArr = WangYuLong.flatten(arguments)
-        for (var i = 0; i < joinArr.length; i++) {
-            for (j = i + 1; j < joinArr.length; j++) {
-                if (joinArr[i] == joinArr[j]) {
-                    joinArr[j] = null
-                }
-            }
+        for (var i = 0; i < arguments.length; i++) {
+            newArr = newArr.concat(arguments[i])
         }
-        for (var i = 0; i < joinArr.length; i++) {
-            if (joinArr[i] != undefined) {
-                newArr.push(joinArr[i])
+        for (var i = 0; i < newArr.length; i++) {
+            if (newArr.indexOf(newArr[i]) < i) {
+                newArr.splice(i, 1)
             }
         }
         return newArr
@@ -1273,20 +1268,14 @@ var WangYuLong = {
         } else {
             functer = func
         }
-        var newArr = [arr1[0]]
         var sumArr = WangYuLong.union(arr1, arr2)
-        for (var i = 0; i < sumArr.length; i++) {
-            var add = true
-            for (var j = 0; j < newArr.length; j++) {
-                if (functer(sumArr[i]) == functer(newArr[j])) {
-                    add = false
-                }
-            }
-            if (add) {
-                newArr.push(sumArr[i])
+        var testArr = sumArr.map(functer)
+        for (var i = 0; i < testArr.length; i++) {
+            if (testArr.indexOf(testArr[i]) < i) {
+                sumArr.splice(i, 1)
             }
         }
-        return newArr
+        return sumArr
     },
     unionWith: function(arr1, arr2, func) {
         var newArr = [arr1[0]]
