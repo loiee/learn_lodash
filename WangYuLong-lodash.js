@@ -301,9 +301,8 @@ var WangYuLong = {
         var sameArr = []
         var lastArr = []
         for (var i = 0; i < arguments.length; i++) {
-            newArr.push(arguments[i])
+            newArr = newArr.concat(arguments[i])
         }
-        newArr = WangYuLong.flatten(newArr)
         for (var i = 0; i < newArr.length; i++) {
             for (var j = i + 1; j < newArr.length; j++) {
                 if (newArr[i] == newArr[j]) {
@@ -1600,39 +1599,43 @@ var WangYuLong = {
     flatMap: function(arr, func) {
         var result = func(arr[0])
         for (var i = 1; i < arr.length; i++) {
-            result = WangYuLong.concat(result, func(arr[i]))
+            result = result.concat(func(arr[i]))
         }
         return result
     },
-    flatMapDeep: function(arr, func) {
+    flatMapDeep: function(arr, f) {
+        var func = function(x) {
+            return WangYuLong.flattenDeep(f(x))
+        }
         var result = func(arr[0])
         for (var i = 1; i < arr.length; i++) {
-            result = WangYuLong.concat(result, func(arr[i]))
+            result = result.concat(func(arr[i]))
         }
-        return WangYuLong.flattenDeep(result)
+        return result
     },
-    flatMapDepth: function(arr, func, depth) {
+    flatMapDepth: function(arr, f, depth) {
+        var func = function(x) {
+            return WangYuLong.flattenDepth(f(x), depth - 1)
+        }
         var result = func(arr[0])
         for (var i = 1; i < arr.length; i++) {
-            result = WangYuLong.concat(result, func(arr[i]))
+            result = result.concat(func(arr[i]))
         }
-        return WangYuLong.flattenDepth(result, depth - 1)
+        return result
     },
     forEach: function(collection, func) {
         var newArr = []
         for (var key in collection) {
             func(collection[key], key, collection)
-            newArr.push(collection[key])
         }
-        return newArr
+        return collection
     },
     forEachRight: function(collection, func) {
         var newArr = []
         for (var key in collection) {
             func(collection[collection.length - 1 - key], key, collection)
-            newArr.push(collection[key])
         }
-        return newArr
+        return collection
     },
     /*
     _.groupBy([6.1, 4.2, 6.3], Math.floor);
