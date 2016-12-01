@@ -1701,38 +1701,26 @@ var WangYuLong = {
         return result
     },
     orderBy: function(collection, func, orders) {
-        if (Array.isArray(func)) {
-            var f = function(x) {
-                var newArr = []
-                for (var i = 0; i < func.length; i++) {
-                    newArr.push(x[func[i]])
-                }
-                return newArr
-            }
-        } //这里只考虑func为数组
-        var valueArr = collection.map(f)
-
-        function valueSort(arr, innerIndex) {
-            //[[A],[B],[C]],对ABC按innerIndex的值排序,需考虑稳定性
-            for (var i = 0; i < arr.length - 1; i++) {
-                for (var j = i + 1; j < arr.length; j++) {
-                    if (arr[i][innerIndex] > arr[j][innerIndex]) {
-                        var t = arr[i]
-                        arr[i] = arr[j]
-                        arr[j] = t
+        function keySort(collection, key) { //定义按key排序对象
+            for (var i = 0; i < collection.length - 1; i++) {
+                for (var j = i + 1; j < collection.length; j++) {
+                    if (collection[i][key] > collection[j][key]) {
+                        var t = collection[i]
+                        collection[i] = collection[j]
+                        collection[j] = t
                     }
                 }
             }
-            return arr
-        } //函数定义完毕
+            return collection
+        }
         for (var i = orders.length - 1; i >= 0; i--) {
             if (orders[i] == 'desc') {
-                valueSort(valueArr, i).reverse()
+                keySort(collection, func[i]).reverse()
             } else {
-                valueSort(valueArr, i)
+                keySort(collection, func[i])
             }
         }
-        return valueArr
+        return collection
     },
     parseJson: function(str) {
         var json = str
