@@ -953,7 +953,9 @@ var WangYuLong = {
         }
 
         for (var key in object) {
-            newArr.push(key)
+            if (object.hasOwnProperty(key)) {
+                newArr.push(key)
+            }
         }
         return newArr
     },
