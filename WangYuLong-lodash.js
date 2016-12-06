@@ -500,8 +500,12 @@ var WangYuLong = {
     map: function(collection, iteratee) {
         var newArr = []
         if (typeof iteratee == 'string') {
+            iteratee = iteratee.split('.')
             var f = function(x) {
-                return x[iteratee]
+                for (var i = 0; i < iteratee.length; i++) {
+                    x = x[iteratee[i]]
+                }
+                return x
             }
         } else {
             var f = iteratee
@@ -651,18 +655,75 @@ var WangYuLong = {
         }
         return result
     },
-    some: function(collection, predicate) {
+    reduceRight: function(collection, func, initial) {
+        if (Array.isArray(collection)) {
+            if (initial == undefined) {
+                var result = collection[collection.length - 1]
+            } else {
+                result = func(initial, collection[collection.length - 1], collection.length - 1, collection)
+            }
+            for (var i = collection.length - 2; i >= 0; i--) {
+                result = func(result, collection[i], i, collection)
+            }
+        } //colletion为对象没考虑
+        return result
+    },
+    some: function(collection, func) {
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
         for (var i = 0; i < collection.length; i++) {
-            if (predicate(collection[i])) {
+            if (func(collection[i], i, collection)) {
                 return true
             }
         }
         return false
     },
-    reject: function(collection, fn) {
+    reject: function(collection, func) {
         var newArr = []
+        if (Array.isArray(func)) {
+            functer = function(o) {
+                return o[func[0]] == func[1]
+            }
+        } else if (typeof(func) == 'object') {
+            functer = function(o) {
+                for (var key in func) {
+                    if (func[key] != o[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        if (typeof(func) == 'string') {
+            functer = function(o) {
+                return o[func]
+            }
+        }
+        if (typeof(func) == 'function') {
+            functer = func
+        }
         for (var i = 0; i < collection.length; i++) {
-            if (fn(collection[i], i, collection) == false) {
+            if (functer(collection[i], i, collection) == false) {
                 newArr.push(collection[i])
             }
         }
