@@ -92,7 +92,7 @@ var WangYuLong = {
     flatten: function(array) {
         var newArr = []
         for (var i = 0; i < array.length; i++) {
-            if (array[i][0] == undefined) {
+            if (!Array.isArray(array[i])) {
                 newArr.push(array[i])
             } else {
                 for (var j = 0; j < array[i].length; j++) {
@@ -102,19 +102,20 @@ var WangYuLong = {
         }
         return newArr
     },
-    flattenDeep: function(array) {
-        for (var i = 1;; i++) {
-            var tOrF = true //重置判定条件
-            array = WangYuLong.flatten(array) //对自己降维
-            for (var j = 0; j < array.length; j++) {
-                if (array[j][0]) {
-                    tOrF = false //判断是否是一维数组
+    flattenDeep: function(coll, func) {
+        var result = []
+        flatten(coll)
+
+        function flatten(arr, depth) {
+            for (var i = 0; i < arr.length; i++) {
+                if (!Array.isArray(arr[i])) {
+                    result.push(arr[i])
+                } else {
+                    flatten(arr[i])
                 }
             }
-            if (tOrF) {
-                return array
-            }
         }
+        return result
     },
     flattenDepth: function(array, depth) {
         if (depth == undefined) {
@@ -1605,25 +1606,42 @@ var WangYuLong = {
         }
         return result
     },
-    flatMapDeep: function(arr, f) {
-        var func = function(x) {
-            return WangYuLong.flattenDeep(f(x))
-        }
-        var result = func(arr[0])
-        for (var i = 1; i < arr.length; i++) {
-            result = result.concat(func(arr[i]))
+    flatMapDeep: function(coll, func) {
+        var result = []
+        var arr = coll.map(func)
+        flatten(arr)
+
+        function flatten(arr) {
+            for (var i = 0; i < arr.length; i++) {
+                if (!Array.isArray(arr[i])) {
+                    result.push(arr[i])
+                } else {
+                    flatten(arr[i])
+                }
+            }
         }
         return result
     },
-    flatMapDepth: function(arr, f, depth) {
-        var func = function(x) {
-            return WangYuLong.flattenDepth(f(x), depth - 1)
+    flatMapDepth: function(coll, func, depth) {
+        var arr = coll.map(func)
+
+        function flatten(arr) {
+            var result = []
+            for (var i = 0; i < arr.length; i++) {
+                if (!Array.isArray(arr[i])) {
+                    result.push(arr[i])
+                } else {
+                    for (var j = 0; j < arr[i].length; j++) {
+                        result.push(arr[i][j])
+                    }
+                }
+            }
+            return result
         }
-        var result = func(arr[0])
-        for (var i = 1; i < arr.length; i++) {
-            result = result.concat(func(arr[i]))
+        while (depth--) {
+            arr = flatten(arr)
         }
-        return result
+        return arr
     },
     forEach: function(collection, func) {
         var newArr = []
@@ -1833,5 +1851,17 @@ var WangYuLong = {
             }
         }
         return obj
+    },
+    invokeMap: function(coll, path, ...args) {
+        if (typeof path == 'string') {
+            if (Array.isArray(coll)) {
+                return coll.map(it => Array.prototype['sort'].apply(it, args))
+            } else {
+                return coll.map(it => Object.prototype['sort'].apply(it, args))
+            }
+        }
+        if (typeof path == 'function') {
+            return coll.map(it => path.apply(it, args))
+        }
     },
 }
