@@ -692,7 +692,7 @@ var WangYuLong = {
             functer = func
         }
         for (var i = 0; i < collection.length; i++) {
-            if (func(collection[i], i, collection)) {
+            if (functer(collection[i], i, collection)) {
                 return true
             }
         }
@@ -1784,19 +1784,19 @@ var WangYuLong = {
     orderBy: function(collection, func, orders) {
         function keySort(collection, key) { //定义按key排序对象
             for (var i = 0; i < collection.length - 1; i++) {
-                for (var j = i + 1; j < collection.length; j++) {
-                    if (collection[i][key] > collection[j][key]) {
-                        var t = collection[i]
-                        collection[i] = collection[j]
-                        collection[j] = t
+                for (var j = 0; j < collection.length - 1 - i; j++) {
+                    if (collection[j][key] > collection[j + 1][key]) {
+                        var t = collection[j]
+                        collection[j] = collection[j + 1]
+                        collection[j + 1] = t
                     }
                 }
             }
-            return collection
         }
         for (var i = orders.length - 1; i >= 0; i--) {
             if (orders[i] == 'desc') {
-                keySort(collection, func[i]).reverse()
+                keySort(collection, func[i])
+                collection = collection.reverse()
             } else {
                 keySort(collection, func[i])
             }
@@ -1925,4 +1925,67 @@ var WangYuLong = {
             return coll.map(it => path.apply(it, args))
         }
     },
+    sample: function(arr) {
+        return arr[parseInt(Math.random() * arr.length)]
+    },
+    sampleSize: function(arr, num) {
+        var result = []
+        if (num > arr.length) {
+            num = arr.length
+        }
+        for (var i = 0; i < num; i++) {
+            var rand = parseInt(Math.random() * arr.length)
+            result.push(arr[rand])
+            arr.splice(rand, 1)
+        }
+        return result
+    },
+    shuffle: function(arr) {
+        for (var i = 0; i < arr.length; i++) {
+            var rand = parseInt(Math.random() * arr.length)
+            var temp = arr[i]
+            arr[i] = arr[rand]
+            arr[rand] = temp
+        }
+        return arr
+    },
+    size: function(a) {
+        var count = 0
+        if (typeof a == 'string') {
+            return a.length
+        }
+        for (var key in a) {
+            if (Object.prototype.hasOwnProperty.call(a, key)) {
+                count++
+            }
+        }
+        return count
+    },
+    sortBy: function(collection, iteratee) {
+        function funcSort(collection, f) { //按函数排序对象
+            for (var i = 0; i < collection.length - 1; i++) {
+                for (var j = 0; j < collection.length - 1 - i; j++) {
+                    if (f(collection[j]) > f(collection[j + 1])) {
+                        var t = collection[j]
+                        collection[j] = collection[j + 1]
+                        collection[j + 1] = t
+                    }
+                }
+            }
+        }
+
+        for (var i = 0; i < iteratee.length; i++) {
+            if (typeof iteratee[i] == 'string') {
+                var temp = iteratee[i]
+                iteratee[i] = function(o) {
+                    return o[temp]
+                }
+            }
+        }
+
+        for (var j = 0; j < iteratee.length; j++) {
+            funcSort(collection, iteratee[j])
+        }
+        return collection
+    }
 }
