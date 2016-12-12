@@ -2021,7 +2021,7 @@ var WangYuLong = {
     gt: function(value, other) {
         return value > other
     },
-    gt: function(value, other) {
+    gte: function(value, other) {
         return value >= other
     },
     isArguments: function(value) {
