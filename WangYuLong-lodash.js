@@ -1913,18 +1913,6 @@ var WangYuLong = {
         }
         return obj
     },
-    invokeMap: function(coll, path, ...args) {
-        if (typeof path == 'string') {
-            if (Array.isArray(coll)) {
-                return coll.map(it => Array.prototype['sort'].apply(it, args))
-            } else {
-                return coll.map(it => Object.prototype['sort'].apply(it, args))
-            }
-        }
-        if (typeof path == 'function') {
-            return coll.map(it => path.apply(it, args))
-        }
-    },
     sample: function(arr) {
         return arr[parseInt(Math.random() * arr.length)]
     },
@@ -2005,6 +1993,9 @@ var WangYuLong = {
         return setTimeout(_func(...args), wait)
     },
     castArray: function(value) {
+        if (arguments.length == 0) {
+            return Array.of()
+        }
         return Array.of(value)
     },
     conformsTo: function(object, source) {
@@ -2021,37 +2012,29 @@ var WangYuLong = {
     gt: function(value, other) {
         return value > other
     },
-    gte: function(value, other) {
+    gt: function(value, other) {
         return value >= other
     },
     isArguments: function(value) {
         return !Array.isArray(value) &&
             typeof value === 'object' &&
-            Array.prototype.length.call(value) != undefined
+            value instanceof Function
     },
     isArray: function(value) {
-        if (value === undefined || value === null) {
-            return false
-        }
-        return !!Array.prototype.length.call(value)
+        return value instanceof Array
     },
     isArrayBuffer: function(value) {
-        if (value === undefined || value === null) {
-            return false
-        }
-        return !!ArrayBuffer.prototype.byteLength.call(value)
+        return value instanceof ArrayBuffer
     },
     isArrayLike: function(value) {
-        if (value === undefined || value === null) {
-            return false
-        }
-        return !!Array.prototype.length.call(value) && typeof value != 'function'
+        return value != undefined && value != null && Number.isInteger(value.length) && typeof value != 'function'
+    },
+    isArrayLikeObject: function(value) {
+        return value instanceof Object && value != undefined && value != null && Number.isInteger(value.length) && typeof value != 'function'
     },
     isElement: function(value) {
-        if (value === undefined || value === null) {
-            return false
-        }
-        return !!Node.prototype.ELEMENT_NODE.call(value)
+        return value instanceof HTMLElement
+
     },
     isBoolean: function(value) {
         return typeof value === 'boolean'
@@ -2077,7 +2060,7 @@ var WangYuLong = {
         return value instanceof Error
     },
     isFinite: function(value) {
-        return !value === Infinity || !value === -Infinity
+        return !(value === Infinity) || !(value === -Infinity)
     },
     isFunction: function(value) {
         return value instanceof Function
@@ -2110,4 +2093,5 @@ var WangYuLong = {
         }
         return isNaN(value)
     },
+
 }
