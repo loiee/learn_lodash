@@ -1987,5 +1987,129 @@ var WangYuLong = {
             funcSort(collection, iteratee[j])
         }
         return collection
-    }
+    },
+    defer: function(func, ...args) {
+        function _func(...args) {
+            return function() {
+                func(...args)
+            }
+        }
+        return setTimeout(_func(...args), 0)
+    },
+    delay: function(func, wait, ...args) {
+        function _func(...args) {
+            return function() {
+                func(...args)
+            }
+        }
+        return setTimeout(_func(...args), wait)
+    },
+    castArray: function(value) {
+        return Array.of(value)
+    },
+    conformsTo: function(object, source) {
+        for (var key in source) {
+            return source[key](object[key])
+        }
+    },
+    eq: function(value, other) {
+        if (value != value && other != other) {
+            return true
+        }
+        return value === other
+    },
+    gt: function(value, other) {
+        return value > other
+    },
+    gt: function(value, other) {
+        return value >= other
+    },
+    isArguments: function(value) {
+        return !Array.isArray(value) &&
+            typeof value === 'object' &&
+            Array.prototype.length.call(value) != undefined
+    },
+    isArray: function(value) {
+        if (value === undefined || value === null) {
+            return false
+        }
+        return !!Array.prototype.length.call(value)
+    },
+    isArrayBuffer: function(value) {
+        if (value === undefined || value === null) {
+            return false
+        }
+        return !!ArrayBuffer.prototype.byteLength.call(value)
+    },
+    isArrayLike: function(value) {
+        if (value === undefined || value === null) {
+            return false
+        }
+        return !!Array.prototype.length.call(value) && typeof value != 'function'
+    },
+    isElement: function(value) {
+        if (value === undefined || value === null) {
+            return false
+        }
+        return !!Node.prototype.ELEMENT_NODE.call(value)
+    },
+    isBoolean: function(value) {
+        return typeof value === 'boolean'
+    },
+    isDate: function(value) {
+        return value instanceof Date
+    },
+    isEmpty: function(value) {
+        if (typeof value === 'object') {
+            for (var key in value) {
+                return false
+            }
+        }
+        if (value === undefined || value === null) {
+            return true
+        }
+        if (value.length > 0) {
+            return false
+        }
+        return true
+    },
+    isError: function(value) {
+        return value instanceof Error
+    },
+    isFinite: function(value) {
+        return !value === Infinity || !value === -Infinity
+    },
+    isFunction: function(value) {
+        return value instanceof Function
+    },
+    isInteger: function(value) {
+        return parseInt(value) === value
+    },
+    isLength: function(value) {
+        return Number.isInteger(value) && value >= 0
+    },
+    isMap: function(value) {
+        return value instanceof Map
+    },
+    isMatch: function(object, source) {
+        for (var key in source) {
+            if (!this.isEqual(object[key], source[key])) {
+                return false
+            }
+        }
+        return true
+    },
+    isMatchWith: function(object, source, func) {
+        for (var key in source) {
+            return func(object[key], source[key])
+        }
+    },
+    isNaN;
+
+    function(value) {
+        if (value === undefined) {
+            return false
+        }
+        return isNaN(value)
+    },
 }
