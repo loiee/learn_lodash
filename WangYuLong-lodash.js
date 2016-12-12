@@ -2104,9 +2104,7 @@ var WangYuLong = {
             return func(object[key], source[key])
         }
     },
-    isNaN;
-
-    function(value) {
+    isNaN: function(value) {
         if (value === undefined) {
             return false
         }
