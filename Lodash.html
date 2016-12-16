@@ -1,4 +1,5 @@
-var WangYuLong = {
+<script>
+var _ = {
     chunk: function(array, size) {
         var newArr = new Array(Math.ceil(array.length / size))
         for (var i = 0; i < newArr.length; i++) {
@@ -23,7 +24,7 @@ var WangYuLong = {
     concat: function() {
         var newArr = []
         for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i][0] == undefined) {
+            if (!Array.isArray(arguments[i])) {
                 newArr.push(arguments[i])
             } else {
                 for (var j = 0; j < arguments[i].length; j++) {
@@ -92,30 +93,30 @@ var WangYuLong = {
     flatten: function(array) {
         var newArr = []
         for (var i = 0; i < array.length; i++) {
-            if (!Array.isArray(array[i])) {
+            if (array[i][0] == undefined) {
                 newArr.push(array[i])
             } else {
                 for (var j = 0; j < array[i].length; j++) {
                     newArr.push(array[i][j])
                 }
             }
+
         }
         return newArr
     },
-    flattenDeep: function(coll, func) {
-        var result = []
-        flatten(coll)
-
-        function flatten(arr, depth) {
-            for (var i = 0; i < arr.length; i++) {
-                if (!Array.isArray(arr[i])) {
-                    result.push(arr[i])
-                } else {
-                    flatten(arr[i])
+    flattenDeep: function(array) {
+        for (var i = 1;; i++) {
+            var tOrF = true
+            array = WangYuLong.flatten(array)
+            for (var j = 0; j < array.length; j++) {
+                if (array[j][0]) {
+                    tOrF = false
                 }
             }
+            if (tOrF) {
+                return array
+            }
         }
-        return result
     },
     flattenDepth: function(array, depth) {
         if (depth == undefined) {
@@ -128,9 +129,8 @@ var WangYuLong = {
     },
     fromPairs: function(pairs) {
         var newObj = {}
-        for (var i = 0; i < pairs.length; i++) {
-            newObj[pairs[i][0]] = pairs[i][1]
-        }
+        newObj[pairs[0][0]] = pairs[0][1]
+        newObj[pairs[1][0]] = pairs[0][1]
         return newObj
     },
     initial: function(array) {
@@ -479,7 +479,6 @@ var WangYuLong = {
         array = remove1.split('_')
         array = WangYuLong.compact(array)
         var remove2 = array.join('-')
-            //remove2 = remove2.toLowerCase()
         var lastArr = remove2.split(' ') //['foo','Bar']
         var kebab = lastArr.join('-')
         var testArr = kebab.split('')
@@ -500,12 +499,8 @@ var WangYuLong = {
     map: function(collection, iteratee) {
         var newArr = []
         if (typeof iteratee == 'string') {
-            iteratee = iteratee.split('.')
             var f = function(x) {
-                for (var i = 0; i < iteratee.length; i++) {
-                    x = x[iteratee[i]]
-                }
-                return x
+                return x[iteratee]
             }
         } else {
             var f = iteratee
@@ -591,7 +586,7 @@ var WangYuLong = {
     },
     /**
      *检查给定参数的所有元素是否满足断定条件，若都满足，返回true，否则返回false
-     *参数 collection，参与迭代的数组/对象
+     *参数 collection，参与迭代的 数组/对象 predicate(value,index|key,collection)函数/数组/对象
      *返回值 true/false
      *例：_.every([true, 1, null, 'yes'], Boolean); 返回=> false
      */
@@ -632,7 +627,7 @@ var WangYuLong = {
     reduce: function(collection, func, initial) {
         if (Array.isArray(collection)) {
             if (initial == undefined) {
-                var result = collection[0]
+                var sult = collection[0]
             } else {
                 result = func(initial, collection[0], 0, collection)
             }
@@ -653,19 +648,6 @@ var WangYuLong = {
                 flag = false
             }
         }
-        return result
-    },
-    reduceRight: function(collection, func, initial) {
-        if (Array.isArray(collection)) {
-            if (initial == undefined) {
-                var result = collection[collection.length - 1]
-            } else {
-                result = func(initial, collection[collection.length - 1], collection.length - 1, collection)
-            }
-            for (var i = collection.length - 2; i >= 0; i--) {
-                result = func(result, collection[i], i, collection)
-            }
-        } //colletion为对象没考虑
         return result
     },
     some: function(collection, func) {
@@ -691,39 +673,18 @@ var WangYuLong = {
         if (typeof(func) == 'function') {
             functer = func
         }
+
         for (var i = 0; i < collection.length; i++) {
-            if (functer(collection[i], i, collection)) {
+            if (functer(collection[i])) {
                 return true
             }
         }
         return false
     },
-    reject: function(collection, func) {
+    reject: function(collection, fn) {
         var newArr = []
-        if (Array.isArray(func)) {
-            functer = function(o) {
-                return o[func[0]] == func[1]
-            }
-        } else if (typeof(func) == 'object') {
-            functer = function(o) {
-                for (var key in func) {
-                    if (func[key] != o[key]) {
-                        return false
-                    }
-                }
-                return true
-            }
-        }
-        if (typeof(func) == 'string') {
-            functer = function(o) {
-                return o[func]
-            }
-        }
-        if (typeof(func) == 'function') {
-            functer = func
-        }
         for (var i = 0; i < collection.length; i++) {
-            if (functer(collection[i], i, collection) == false) {
+            if (fn(collection[i], i, collection) == false) {
                 newArr.push(collection[i])
             }
         }
@@ -735,9 +696,9 @@ var WangYuLong = {
         for (var i = 0; i < paths.length; i++) {
             var point = paths[i].split('')
             var pure = []
-            for (var j = 0; j < point.length; j++) { //去[]和.
+            for (var j = 0; j < point.length; j++) { //去掉[]和.
                 if (point[j] != '[' && point[j] != ']' && point[j] != '.') {
-                    pure.push([point[j]]) //[[a],[0],[b],[c]]
+                    pure.push([point[j]])
                 }
             }
             var result = object
@@ -1667,42 +1628,23 @@ var WangYuLong = {
         }
         return result
     },
-    flatMapDeep: function(coll, func) {
-        var result = []
-        var arr = coll.map(func)
-        flatten(arr)
-
-        function flatten(arr) {
-            for (var i = 0; i < arr.length; i++) {
-                if (!Array.isArray(arr[i])) {
-                    result.push(arr[i])
-                } else {
-                    flatten(arr[i])
-                }
-            }
+    flatMapDeep: function(arr, func) {
+        var result = func(arr[0])
+        for (var i = 1; i < arr.length; i++) {
+            result = result.concat(func(arr[i]))
         }
+        result = result.join(",").split(",")
         return result
     },
-    flatMapDepth: function(coll, func, depth) {
-        var arr = coll.map(func)
-
-        function flatten(arr) {
-            var result = []
-            for (var i = 0; i < arr.length; i++) {
-                if (!Array.isArray(arr[i])) {
-                    result.push(arr[i])
-                } else {
-                    for (var j = 0; j < arr[i].length; j++) {
-                        result.push(arr[i][j])
-                    }
-                }
-            }
-            return result
+    flatMapDepth: function(arr, f, depth) {
+        var func = function(x) {
+            return WangYuLong.flattenDepth(f(x), depth - 1)
         }
-        while (depth--) {
-            arr = flatten(arr)
+        var result = func(arr[0])
+        for (var i = 1; i < arr.length; i++) {
+            result = result.concat(func(arr[i]))
         }
-        return arr
+        return result
     },
     forEach: function(collection, func) {
         var newArr = []
@@ -1802,106 +1744,6 @@ var WangYuLong = {
             }
         }
         return collection
-    },
-    parseJson: function(str) {
-        var json = str
-        var i = 0
-        return parse()
-
-        function parse() {
-            if (!isNaN(json[i])) {
-                return parseNumber()
-            }
-            if (json[i] === '"') {
-                return parseString()
-            }
-            if (json[i] === 't') {
-                return parseTrue()
-            }
-            if (json[i] === 'f') {
-                return parseFalse()
-            }
-            if (json[i] === 'n') {
-                return parseNull()
-            }
-            if (json[i] === '[') {
-                return parseArray()
-            }
-            if (json[i] === '{') {
-                return parseObject()
-            }
-        }
-
-        function parseNumber() {
-            var start = i
-            while (true) {
-                i++
-                if (isNaN(json[i])) {
-                    return Number(json.slice(start, i))
-                }
-            }
-        }
-
-        function parseString() {
-            var start = i + 1
-            var index = json.indexOf('"', start)
-            var string = json.slice(start, index)
-            i = index + 1
-            return string
-        }
-
-        function parseTrue() {
-            i = i + 4
-            return true
-        }
-
-        function parseFalse() {
-            i = i + 5
-            return false
-        }
-
-        function parseNull() {
-            i = i + 4
-            return null
-        }
-
-        function parseArray() {
-            var result = []
-            i++
-            while (true) {
-                if (json[i] === ']') {
-                    i++
-                    break
-                }
-                result.push(parse())
-                if (json[i] == ',') {
-                    i++
-                }
-            }
-            return result
-        }
-
-        function parseObject() {
-            var result = {}
-            i++
-            var key
-            var value
-            while (true) {
-                if (json[i] == '}') {
-                    break
-                }
-                key = parseString()
-                i++
-                value = parse()
-                result[key] = value
-                if (json[i] == ',') {
-                    i++
-                    continue
-                }
-            }
-            i++
-            return result
-        }
     },
     forOwn: function(obj, func) {
         for (var key in obj) {
@@ -2102,6 +1944,12 @@ var WangYuLong = {
     isEqualWith: function(value, other, func) {
         for (var key in value) {
             return func(value[key], other[key], key, value, other)
-        } //stack参数是啥？
+        }
     },
+
+
+
+
+
 }
+</script>
