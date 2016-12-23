@@ -472,9 +472,9 @@ var _ = {
         return escR
     },
     kebabCase: function(str) {
-        str=str.replace(/\W|_/g,'-').replace(/^-+/,'').replace(/-+$/,'')
-        if(!str.includes('-')){
-            str=str.replace(/([0-9a-z])([A-Z])/,'$1-$2')
+        str = str.replace(/\W|_/g, '-').replace(/^-+/, '').replace(/-+$/, '')
+        if (!str.includes('-')) {
+            str = str.replace(/([0-9a-z])([A-Z])/, '$1-$2')
         }
         return str.toLowerCase()
     },
@@ -691,29 +691,12 @@ var _ = {
         }
         return lastResult
     },
-    lowerCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var lower = lastArr.join('-')
-        var testArr = lower.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '-') {
-                lower = lower.split('-').join(' ').toLowerCase()
-                return lower
-            }
+    lowerCase: function(str) {
+        str = str.replace(/\W|_/g, ' ').trim()
+        if (!str.includes(' ')) {
+            str = str.replace(/([0-9a-z])([A-Z])/, '$1 $2')
         }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = [' ' + testArr[j]]
-            }
-        }
-        lower = testArr.join('').toLowerCase()
-        return lower
+        return str.toLowerCase()
     },
     lowerFirst: function(string) {
         var strArr = string.split('')
@@ -811,32 +794,13 @@ var _ = {
         }
         return stringBefore + replacement + stringAfter
     },
-    normalCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var normal = lastArr.join('-')
-        var testArr = normal.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '-') {
-                normal = normal.split('-').join(' ')
-                return normal
-            }
-        }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = [' ' + testArr[j]]
-            }
-        }
-        normal = testArr.join('')
-        return normal
-    },
     startCase: function(string) {
-        string = this.normalCase(string) //foo Bar
+
+        string = string.replace(/\W|_/g, ' ').trim()
+        if (!string.includes(' ')) {
+            string = string.replace(/([0-9a-z])([A-Z])/, '$1 $2')
+        }
+
         var strArr = string.split(' ') //[foo,Bar]
         for (var i = 0; i < strArr.length; i++) {
             strArr[i] = strArr[i].split('') //[f,o,o]
@@ -847,9 +811,9 @@ var _ = {
         return string
     },
     snakeCase: function(str) {
-        str=str.replace(/\W/g,'_').replace(/^_+/,'').replace(/_+$/,'')
-        if(!str.includes('_')){
-            str=str.replace(/([0-9a-z])([A-Z])/,'$1_$2')
+        str = str.replace(/\W/g, '_').replace(/^_+/, '').replace(/_+$/, '')
+        if (!str.includes('_')) {
+            str = str.replace(/([0-9a-z])([A-Z])/, '$1_$2')
         }
         return str.toLowerCase()
     },
@@ -2585,7 +2549,7 @@ var _ = {
     transform: function(obj, func, accumulator = Object.getPrototypeOf(obj)) {
         for (var key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                if(func(accumulator, obj[key], key, obj)===false){
+                if (func(accumulator, obj[key], key, obj) === false) {
                     return accumulator
                 }
             }
@@ -2715,7 +2679,7 @@ var _ = {
             str = str.substring(0, length - olength)
             return str.substring(0, index) + omission
         }
-        return str.substring(0,length-olength) + omission
+        return str.substring(0, length - olength) + omission
     },
     unescape: function(string) {
         return string.replace(/&amp;|&lt;|&gt;|&quot;|&#39;|&#96;/, function(match, index) {
@@ -3027,7 +2991,7 @@ var _ = {
     },
     分解质因数: function(a) {
         var arr = new Array(a).fill(0).map((it, index) => index)
-        arr=arr.map(it => {
+        arr = arr.map(it => {
             if (!this.isPrime(it)) {
                 return false
             } else {
@@ -3036,7 +3000,7 @@ var _ = {
         })
         var result = [],
             temp = a
-            console.log(arr)
+        console.log(arr)
         for (var j = 1; j < Math.log2(temp); j++) {
             for (var i = 1; i < arr.length; i++) {
                 if (Number.isInteger(a / arr[i])) {

@@ -729,29 +729,12 @@ var WangYuLong = {
         }
         return lastResult
     },
-    lowerCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var lower = lastArr.join('-')
-        var testArr = lower.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '-') {
-                lower = lower.split('-').join(' ').toLowerCase()
-                return lower
-            }
+    lowerCase: function(str) {
+        str = str.replace(/\W|_/g, ' ').trim()
+        if (!str.includes(' ')) {
+            str = str.replace(/([0-9a-z])([A-Z])/, '$1 $2')
         }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = [' ' + testArr[j]]
-            }
-        }
-        lower = testArr.join('').toLowerCase()
-        return lower
+        return str.toLowerCase()
     },
     lowerFirst: function(string) {
         var strArr = string.split('')
@@ -849,32 +832,13 @@ var WangYuLong = {
         }
         return stringBefore + replacement + stringAfter
     },
-    normalCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var normal = lastArr.join('-')
-        var testArr = normal.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '-') {
-                normal = normal.split('-').join(' ')
-                return normal
-            }
-        }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = [' ' + testArr[j]]
-            }
-        }
-        normal = testArr.join('')
-        return normal
-    },
     startCase: function(string) {
-        string = this.normalCase(string) //foo Bar
+
+        string = string.replace(/\W|_/g, ' ').trim()
+        if (!string.includes(' ')) {
+            string = string.replace(/([0-9a-z])([A-Z])/, '$1 $2')
+        }
+
         var strArr = string.split(' ') //[foo,Bar]
         for (var i = 0; i < strArr.length; i++) {
             strArr[i] = strArr[i].split('') //[f,o,o]
