@@ -122,7 +122,7 @@ var WangYuLong = {
             depth = 1
         }
         for (var i = 1; i <= depth; i++) {
-            array = WangYuLong.flatten(array)
+            array = this.flatten(array)
         }
         return array
     },
@@ -364,8 +364,8 @@ var WangYuLong = {
         return array
     },
     lastIndexOf: function(array, value, from) {
-        array = WangYuLong.reverse(array)
-        var index = WangYuLong.indexOf(array, value, from)
+        array = this.reverse(array)
+        var index = this.indexOf(array, value, from)
         return array.length - index - 1
     },
     nth: function(array, n) {
@@ -378,21 +378,20 @@ var WangYuLong = {
         return array[n]
     },
     camelCase: function(string) {
-        var array = string.split('-')
-        array = WangYuLong.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = WangYuLong.compact(array)
-        var remove2 = array.join(' ')
-        remove2 = remove2.toLowerCase()
-        var lastArr = remove2.split(' ') //['foo','bar']
-        for (i = 1; i < lastArr.length; i++) {
-            var singleWordArr = lastArr[i].split('') //['b','a','r']
-            singleWordArr[0] = singleWordArr[0].toUpperCase() //['B','a','r']
-            lastArr[i] = singleWordArr.join('') //'Bar'
+        var reg = /[a-zA-Z0-9]/
+        string = string.toLowerCase()
+        var arr = string.split('')
+        var result = []
+        for (var i = 0; i < arr.length; i++) {
+            if (!reg.test(arr[i]) && arr[i + 1] != undefined) {
+                arr[i + 1] = arr[i + 1].toUpperCase()
+            } else if (reg.test(arr[i])) {
+                result.push(arr[i])
+            }
         }
-        var camel = lastArr.join('')
-        return camel
+        result[0] = result[0].toLowerCase()
+        result = result.join('')
+        return result
     },
     repeat: function(string, n) {
         if (n == undefined) {
@@ -474,10 +473,10 @@ var WangYuLong = {
     },
     kebabCase: function(string) {
         var array = string.split('-')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove1 = array.join(' ')
         array = remove1.split('_')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove2 = array.join('-')
             //remove2 = remove2.toLowerCase()
         var lastArr = remove2.split(' ') //['foo','Bar']
@@ -486,6 +485,7 @@ var WangYuLong = {
         for (var i = 0; i < testArr.length; i++) {
             if (testArr[i] == '-') {
                 kebab = kebab.toLowerCase()
+                kebab.replace(/\s+/g, '')
                 return kebab
             }
         }
@@ -750,10 +750,10 @@ var WangYuLong = {
     },
     lowerCase: function(string) {
         var array = string.split('-')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove1 = array.join(' ')
         array = remove1.split('_')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove2 = array.join('-')
         var lastArr = remove2.split(' ') //['foo','Bar']
         var lower = lastArr.join('-')
@@ -870,10 +870,10 @@ var WangYuLong = {
     },
     normalCase: function(string) {
         var array = string.split('-')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove1 = array.join(' ')
         array = remove1.split('_')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove2 = array.join('-')
         var lastArr = remove2.split(' ') //['foo','Bar']
         var normal = lastArr.join('-')
@@ -893,7 +893,7 @@ var WangYuLong = {
         return normal
     },
     startCase: function(string) {
-        string = WangYuLong.normalCase(string) //foo Bar
+        string = this.normalCase(string) //foo Bar
         var strArr = string.split(' ') //[foo,Bar]
         for (var i = 0; i < strArr.length; i++) {
             strArr[i] = strArr[i].split('') //[f,o,o]
@@ -905,10 +905,10 @@ var WangYuLong = {
     },
     snakeCase: function(string) {
         var array = string.split('-')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove1 = array.join(' ')
         array = remove1.split('_')
-        array = WangYuLong.compact(array)
+        array = this.compact(array)
         var remove2 = array.join('-')
         var lastArr = remove2.split(' ') //['foo','Bar']
         var kebab = lastArr.join('_')
@@ -916,6 +916,7 @@ var WangYuLong = {
         for (var i = 0; i < testArr.length; i++) {
             if (testArr[i] == '_') {
                 kebab = kebab.toLowerCase()
+                kebab.replace(/\s+/g, '')
                 return kebab
             }
         }
@@ -1331,7 +1332,7 @@ var WangYuLong = {
         } else {
             functer = func
         }
-        var sumArr = WangYuLong.union(arr1, arr2)
+        var sumArr = this.union(arr1, arr2)
         var testArr = sumArr.map(functer)
         for (var i = 0; i < testArr.length; i++) {
             if (testArr.indexOf(testArr[i]) < i) {
@@ -1342,7 +1343,7 @@ var WangYuLong = {
     },
     unionWith: function(arr1, arr2, func) {
         var newArr = [arr1[0]]
-        var sumArr = WangYuLong.union(arr1, arr2)
+        var sumArr = this.union(arr1, arr2)
         for (var i = 0; i < sumArr.length; i++) {
             var add = true
             for (var j = 0; j < newArr.length; j++) {
@@ -1406,7 +1407,7 @@ var WangYuLong = {
             functer = func
         }
         var newArr = []
-        var sumArr = WangYuLong.union(arr1, arr2)
+        var sumArr = this.union(arr1, arr2)
         for (var i = 0; i < sumArr.length; i++) {
             var add = true
             for (var j = 0; j < sumArr.length; j++) {
@@ -1422,7 +1423,7 @@ var WangYuLong = {
     },
     xorWith: function(arr1, arr2, func) {
         var newArr = []
-        var sumArr = WangYuLong.union(arr1, arr2)
+        var sumArr = this.union(arr1, arr2)
         for (var i = 0; i < sumArr.length; i++) {
             var add = true
             for (var j = 0; j < sumArr.length; j++) {
@@ -1460,7 +1461,7 @@ var WangYuLong = {
     matches: function(source) {
         return function(obj) {
             for (var key in source) {
-                if (!WangYuLong.isEqual(source[key], obj[key])) {
+                if (!this.isEqual(source[key], obj[key])) {
                     return false
                 }
             }
@@ -1478,12 +1479,12 @@ var WangYuLong = {
             return false
         }
         for (var key in a) {
-            if (!WangYuLong.isEqual(a[key], b[key])) {
+            if (!this.isEqual(a[key], b[key])) {
                 return false
             }
         }
         for (var key in b) {
-            if (!WangYuLong.isEqual(a[key], b[key])) {
+            if (!this.isEqual(a[key], b[key])) {
                 return false
             }
         }
@@ -2104,4 +2105,1354 @@ var WangYuLong = {
             return func(value[key], other[key], key, value, other)
         } //stack参数是啥？
     },
+    isNative: function(func) {
+        var reg = /\(\) \{ \[native code\] \}/
+        return reg.test(func.toString())
+    },
+    isNil: function(value) {
+        return value === null || value === undefined
+    },
+    isNull: function(value) {
+        return value === null
+    },
+    isNumber: function(value) {
+        return typeof value === 'number'
+    },
+    isObject: function(value) {
+        if (value === null) {
+            return false
+        }
+        return typeof value === 'object' || typeof value === 'function'
+    },
+    isObjectLike: function(value) {
+        if (value === null) {
+            return false
+        }
+        return typeof value === 'object'
+    },
+    isPlainObject: function(value) {
+        return value instanceof Object || Object.getPrototypeOf(value) === null
+    },
+    isRegExp: function(value) {
+        return value instanceof RegExp
+    },
+    isSafeInteger: function(value) {
+        return Number.isSafeInteger(value)
+    },
+    isSet: function(value) {
+        return value instanceof Set
+    },
+    isString: function(value) {
+        return value instanceof String || typeof value === 'string'
+    },
+    isSymbol: function(value) {
+        return typeof value === 'symbol'
+    },
+    isTypedArray: function(value) {
+        return value instanceof Int8Array || value instanceof Uint8Array || value instanceof Uint8ClampedArray || value instanceof Int16Array || value instanceof Uint16Array || value instanceof Int32Array || value instanceof Uint32Array || value instanceof Float32Array
+    },
+    isUndefined: function(value) {
+        return value === undefined
+    },
+    isWeakMap: function(value) {
+        return value instanceof WeakMap
+    },
+    isWeakSet: function(value) {
+        return value instanceof WeakSet
+    },
+    lt: function(value, other) {
+        return value < other
+    },
+    lte: function(value, other) {
+        return value <= other
+    },
+    toArray: function(value) {
+        var arr = []
+        for (var key in value) {
+            arr.push(value[key])
+        }
+        return arr
+    },
+    toFinite: function(value) {
+        if (value === Infinity) {
+            return Number.MAX_VALUE
+        }
+        if (value === -Infinity) {
+            return -Number.MAX_VALUE
+        }
+        if (Number(value) != Number(value)) {
+            return 0
+        }
+        return Number(value)
+    },
+    toInteger: function(value) {
+        if (value === Infinity) {
+            return Number.MAX_VALUE
+        }
+        if (value === -Infinity) {
+            return -Number.MAX_VALUE
+        }
+        if (Number(value) != Number(value)) {
+            return 0
+        }
+        return Math.floor(value)
+    },
+    toLength: function(value) {
+        if (value === Infinity) {
+            return 4294967295
+        }
+        if (value === -Infinity) {
+            return 0
+        }
+        if (Number(value) != Number(value)) {
+            return 0
+        }
+        return Math.floor(value)
+    },
+    toNumber: function(value) {
+        return Number(value)
+    },
+    toPlainObject: function(value) {
+        var o = {}
+        for (var key in value) {
+            o[key] = value[key]
+        }
+    },
+    toSafeInteger: function(value) {
+        if (value === Infinity) {
+            return 9007199254740991
+        }
+        if (value === -Infinity) {
+            return -9007199254740991
+        }
+        if (Number(value) != Number(value)) {
+            return 0
+        }
+        return Math.floor(value)
+    },
+    toString: function(value) {
+        if (value === null || value === undefined) {
+            return ''
+        }
+        if (value == 0 && 1 / value < 0) {
+            return '-0'
+        }
+        return value.toString()
+    },
+    assign: function(obj, ...args) {
+        for (var i = 0; i < args.length; i++) {
+            for (var key in args[i]) {
+                if (Object.prototype.hasOwnProperty.call(args[i], key)) {
+                    obj[key] = args[i][key]
+                }
+            }
+        }
+        return obj
+    },
+    assignIn: function(obj, ...args) {
+        for (var i = 0; i < args.length; i++) {
+            for (var key in args[i]) {
+                obj[key] = args[i][key]
+            }
+        }
+        return obj
+    },
+    add: function(a, b) {
+        return a + b
+    },
+    ceil: function(num, precision) {
+        if (precision == undefined) {
+            precision = 0
+        }
+        return Math.ceil(num * Math.pow(10, precision)) / Math.pow(10, precision)
+    },
+    devide: function(a, b) {
+        return a / b
+    },
+    floor: function(num, precision) {
+        if (precision == undefined) {
+            precision = 0
+        }
+        return Math.floor(num * Math.pow(10, precision)) / Math.pow(10, precision)
+    },
+    max: function(arr) {
+        if (arr.length == 0) {
+            return undefined
+        }
+        return Math.max.apply(null, arr)
+    },
+    maxBy: function(arr, f) {
+        if (typeof f === 'string') {
+            func = function(o) {
+                return o[f]
+            }
+        } else {
+            func = f
+        }
+        var max = arr[0]
+        for (var i = 1; i < arr.length; i++) {
+            if (func(max) < func(arr[i])) {
+                max = arr[i]
+            }
+        }
+        return max
+    },
+    min: function(arr) {
+        if (arr.length == 0) {
+            return undefined
+        }
+        return Math.min.apply(null, arr)
+    },
+    minBy: function(arr, f) {
+        if (typeof f === 'string') {
+            func = function(o) {
+                return o[f]
+            }
+        } else {
+            func = f
+        }
+        var min = arr[0]
+        for (var i = 1; i < arr.length; i++) {
+            if (func(min) > func(arr[i])) {
+                min = arr[i]
+            }
+        }
+        return min
+    },
+    mean: function(arr) {
+        return arr.reduce((a, b) => a + b) / arr.length
+    },
+    meanBy: function(arr, f) {
+        if (typeof f === 'string') {
+            func = function(o) {
+                return o[f]
+            }
+        } else {
+            func = f
+        }
+        return arr.reduce((a, b) => (a + func(b)), 0) / arr.length
+    },
+    multiply: function(a, b) {
+        return a * b
+    },
+    round: function(num, precision) {
+        if (precision == undefined) {
+            precision = 0
+        }
+        return Math.round(num * Math.pow(10, precision)) / Math.pow(10, precision)
+    },
+    subtract: function(a, b) {
+        return a - b
+    },
+    sum: function(arr) {
+        return arr.reduce((a, b) => a + b)
+    },
+    sumBy: function(arr, f) {
+        if (typeof f === 'string') {
+            func = function(o) {
+                return o[f]
+            }
+        } else {
+            func = f
+        }
+        return arr.reduce((a, b) => (a + func(b)), 0)
+    },
+    clamp: function(a, b, c) {
+        if (a <= b) {
+            return b
+        } else if (a >= c) {
+            return c
+        }
+        return a
+    },
+    inRange: function(a, b, c) {
+        if (c == undefined) {
+            c = b
+            b = 0
+        }
+        if (a >= b && a < c) {
+            return true
+        }
+        if (a >= c && a < b) {
+            return true
+        }
+        return false
+    },
+    random: function(lower, upper, floating) {
+        if (typeof upper != 'number' && upper != true) {
+            if (Number.isInteger(lower)) {
+                return Math.floor(Math.random() * (lower + 1))
+            }
+            return Math.random() * lower
+        }
+        if (upper === true) {
+            return Math.random() * lower
+        }
+        if (Number.isInteger(lower) && Number.isInteger(upper) && floating != true) {
+            return Math.floor(Math.random() * (upper - lower + 1) + lower)
+        }
+        return Math.random() * (upper - lower) + lower
+    },
+    defaults: function(obj, ...args) {
+        for (var i = 0; i < args.length; i++) {
+            for (var key in args[i]) {
+                if (obj[key] == undefined) {
+                    obj[key] = args[i][key]
+                }
+            }
+        }
+        return obj
+    },
+    defaultsDeep: function(obj, ...args) {
+        for (var i = 0; i < args.length; i++) {
+            for (var key in args[i]) {
+                if (obj[key] instanceof Object) {
+                    this.defaultsDeep(obj[key], args[i][key])
+                } else {
+                    if (obj[key] == undefined) {
+                        obj[key] = args[i][key]
+                    }
+                }
+            }
+        }
+        return obj
+    },
+    findKey: function(obj, f) {
+        if (Array.isArray(f)) {
+            var func = function(o) {
+                return o[f[0]] == f[1]
+            }
+        } else if (typeof f === 'object') {
+            var func = function(o) {
+                for (var key in f) {
+                    if (o[key] != f[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        } else if (typeof f === 'string') {
+            var func = function(o) {
+                return o[f]
+            }
+        } else {
+            var func = f
+        }
+
+        for (var key in obj) {
+            if (func(obj[key])) {
+                return key
+            }
+        }
+
+    },
+    findLastKey: function(obj, f) {
+        if (Array.isArray(f)) {
+            var func = function(o) {
+                return o[f[0]] == f[1]
+            }
+        } else if (typeof f === 'object') {
+            var func = function(o) {
+                for (var key in f) {
+                    if (o[key] != f[key]) {
+                        return false
+                    }
+                }
+                return true
+            }
+        } else if (typeof f === 'string') {
+            var func = function(o) {
+                return o[f]
+            }
+        } else {
+            var func = f
+        }
+        var result
+        for (var key in obj) {
+            if (func(obj[key])) {
+                result = key
+            }
+        }
+        return result
+    },
+    forIn: function(obj, func) {
+        for (var key in obj) {
+            if (func(obj[key], key, obj) === false) {
+                return obj
+            }
+        }
+        return obj
+    },
+    forInRight: function(obj, func) {
+        var keys = []
+        for (var key in obj) {
+            keys.unshift(key)
+        }
+        for (var index in keys) {
+            if (func(obj[keys[index]], keys[index], obj) === false) {
+                return obj
+            }
+        }
+        return obj
+    },
+    forOwn: function(obj, func) {
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key) && func(obj[key], key, obj) === false) {
+                return obj
+            }
+        }
+        return obj
+    },
+    forOwnRight: function(obj, func) {
+        var keys = []
+        for (var key in obj && Object.prototype.hasOwnProperty.call(obj, key)) {
+            keys.unshift(key)
+        }
+        for (var index in keys) {
+            if (func(obj[keys[index]], keys[index], obj) === false) {
+                return obj
+            }
+        }
+        return obj
+    },
+    functions: function(obj) {
+        var result = []
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key) && obj[key] instanceof Function) {
+                result.push(key)
+            }
+        }
+        return result
+    },
+    functionsIn: function(obj) {
+        var result = []
+        for (var key in obj) {
+            if (obj[key] instanceof Function) {
+                result.push(key)
+            }
+        }
+        return result
+    },
+    get: function(obj, path, defaultValue) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        var result = obj
+        for (var key in path) {
+            if (result[path[key]] === undefined) {
+                return defaultValue
+            }
+            result = result[path[key]]
+        }
+        return result
+    },
+    has: function(obj, path) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        if (!Object.prototype.hasOwnProperty.call(obj, path[0])) {
+            return false
+        }
+        var result = obj
+        for (var key in path) {
+            if (result[path[key]] === undefined) {
+                return false
+            }
+            result = result[path[key]]
+        }
+        return true
+    },
+    hasIn: function(obj, path) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        var result = obj
+        for (var key in path) {
+            if (result[path[key]] === undefined) {
+                return false
+            }
+            result = result[path[key]]
+        }
+        return true
+    },
+    invert: function(obj) {
+        var o = {}
+        for (var key in obj) {
+            o[obj[key]] = key
+        }
+        return o
+    },
+    invertBy: function(obj, func) {
+        if (func === undefined) {
+            func = function(a) {
+                return a
+            }
+        }
+        var o = {}
+        for (var key in obj) {
+            if (func(obj[key]) in obj) {
+                o[func(obj[key])].push(key)
+            } else {
+                o[func(obj[key])] = [key]
+            }
+        }
+        return o
+    },
+    invoke: function(obj, path, ...args) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        var result = obj
+        for (var i = 0; i < path.length - 1; i++) {
+            result = result[path[i]]
+        }
+        return result[path[i]].apply(result, args)
+    },
+    keysIn: function(obj) {
+        var arr = []
+        for (var key in obj) {
+            arr.push(key)
+        }
+        return arr
+    },
+    mapKeys: function(obj, func) {
+        var o = {}
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                o[func(obj[key], key, obj)] = obj[key]
+            }
+        }
+        return o
+    },
+    mapValues: function(obj, f) {
+        if (typeof f === 'string') {
+            var func = function(o) {
+                return o[f]
+            }
+        } else {
+            var func = f
+        }
+        var o = {}
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                o[key] = func(obj[key])
+            }
+        }
+        return o
+    },
+    merge: function(obj, src) {
+        for (var key in src) {
+            if (key in obj) {
+                this.merge(obj[key], src[key])
+            } else {
+                obj[key] = src[key]
+            }
+        }
+        return obj
+    },
+    mergeWith: function(obj, src, func) {
+        for (var key in obj) {
+            obj[key] = func(obj[key], src[key], key, obj, src)
+            if (func(obj[key], src[key], key, obj, src) === undefined) {
+                return this.merge(obj, src)
+            }
+        }
+        return obj
+    },
+    omit: function(obj, props) {
+        var o = {}
+        for (var key in obj) {
+            if (props.indexOf(key) < 0) {
+                o[key] = obj[key]
+            }
+        }
+        return o
+    },
+    omitBy: function(obj, func) {
+        var o = {}
+        for (var key in obj) {
+            if (func(obj[key]) === false) {
+                o[key] = obj[key]
+            }
+        }
+        return o
+    },
+    pick: function(obj, props) {
+        var o = {}
+        for (var key in obj) {
+            if (props.indexOf(key) >= 0) {
+                o[key] = obj[key]
+            }
+        }
+        return o
+    },
+    pickBy: function(obj, func) {
+        var o = {}
+        for (var key in obj) {
+            if (func(obj[key])) {
+                o[key] = obj[key]
+            }
+        }
+        return o
+    },
+    constant: function(a) {
+        return function() {
+            return a
+        }
+    },
+    result: function(obj, path, defaultValue) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        var result = obj
+        for (var key in path) {
+            if (result[path[key]] === undefined) {
+                result = defaultValue
+                break
+            }
+            result = result[path[key]]
+        }
+        if (typeof result === 'function') {
+            return result.call(this)
+        }
+        return result
+    },
+    set: function(obj, path, value) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        path.splice(path.indexOf(''), 1)
+        var pointer = obj
+        for (var i = 0; i < path.length - 1; i++) {
+            if (pointer[path[i]] === undefined) { //路径找不到的情况
+                if (isNaN(path[i]) && !isNaN(path[i + 1])) {
+                    pointer[path[i]] = []
+                    pointer = pointer[path[i]]
+                } else {
+                    pointer[path[i]] = {}
+                    pointer = pointer[path[i]]
+                }
+            } else { //路径明确
+                pointer = pointer[path[i]]
+            }
+        }
+        pointer[path[i]] = value
+        return obj
+    },
+    setWith: function(obj, path, value, Func) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        if (path.includes('')) {
+            path.splice(path.indexOf(''), 1)
+        }
+        var pointer = obj
+        for (var i = 0; i < path.length - 1; i++) {
+            if (pointer[path[i]] === undefined) {
+                pointer[path[i]] = new Func
+                pointer = pointer[path[i]]
+            } else {
+                pointer = pointer[path[i]]
+            }
+        }
+        pointer[path[i]] = value
+        return obj
+    },
+    toPairs: function(obj) {
+        var arr = []
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                arr.push([key, obj[key]])
+            }
+        }
+        return arr
+    },
+    toPairsIn: function(obj) {
+        var arr = []
+        for (var key in obj) {
+            arr.push([key, obj[key]])
+        }
+        return arr
+    },
+    transform: function(obj, func, accumulator = Object.getPrototypeOf(obj)) {
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                func(accumulator, obj[key], key, obj)
+            }
+        }
+        return accumulator
+    },
+    unset: function(obj, path) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        if (path.includes('')) {
+            path.splice(path.indexOf(''), 1)
+        }
+        var pointer = obj
+        for (var i = 0; i < path.length - 1; i++) {
+            pointer = pointer[path[i]]
+        }
+        return delete pointer[path[i]]
+    },
+    update: function(obj, path, updater) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        if (path.includes('')) {
+            path.splice(path.indexOf(''), 1)
+        }
+        var pointer = obj
+        for (var i = 0; i < path.length - 1; i++) {
+            if (pointer[path[i]] === undefined) { //路径找不到的情况
+                if (isNaN(path[i]) && !isNaN(path[i + 1])) {
+                    pointer[path[i]] = []
+                    pointer = pointer[path[i]]
+                } else {
+                    pointer[path[i]] = {}
+                    pointer = pointer[path[i]]
+                }
+            } else { //路径明确
+                pointer = pointer[path[i]]
+            }
+        }
+        var temp = pointer[path[i]]
+        pointer[path[i]] = updater(temp)
+        return obj
+    },
+    updateWith: function(obj, path, updater, Func) {
+        if (typeof path === 'string') {
+            path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+        }
+        if (path.includes('')) {
+            path.splice(path.indexOf(''), 1)
+        }
+        var pointer = obj
+        for (var i = 0; i < path.length - 1; i++) {
+            if (pointer[path[i]] === undefined) {
+                pointer[path[i]] = new Func
+                pointer = pointer[path[i]]
+            } else {
+                pointer = pointer[path[i]]
+            }
+        }
+        var temp = pointer[path[i]]
+        pointer[path[i]] = updater(temp)
+        return obj
+    },
+    values: function(obj) {
+        var arr = []
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                arr.push(obj[key])
+            }
+        }
+        return arr
+    },
+    valuesIn: function(obj) {
+        var arr = []
+        for (var key in obj) {
+            arr.push(obj[key])
+        }
+        return arr
+    },
+    startsWith: function(str, target, position = 0) {
+        return String.prototype.startsWith.call(str, target, position)
+    },
+    toLower: function(str) {
+        return str.toLowerCase()
+    },
+    toUpper: function(str) {
+        return str.toUpperCase()
+    },
+    trimStart: function(str, chars = '  ') {
+        var strArr = str.split('')
+        for (var i = 0; i < strArr.length; i++) {
+            if (!chars.includes(strArr[i])) {
+                break
+            } else {
+                strArr[i] = ''
+            }
+        }
+        return strArr.join('')
+    },
+    trimEnd: function(str, chars = '  ') {
+        var strArr = str.split('')
+        for (var i = strArr.length - 1; i >= 0; i--) {
+            if (!chars.includes(strArr[i])) {
+                break
+            } else {
+                strArr[i] = ''
+            }
+        }
+        return strArr.join('')
+    },
+    trim: function(str, chars = '  ') {
+        var result = this.trimStart(str, chars)
+        result = this.trimEnd(result, chars)
+        return result
+    },
+    truncate: function(str, obj = {}) {
+        var length = obj.length || 30
+        var omission = obj.omission || '...'
+        var separator = obj.separator || ''
+        var olength = omission.length
+        if (separator != '') {
+            arr = str.split(separator)
+            arr.splice(arr.length - 1)
+            var last = arr[arr.length - 1]
+            var index = str.indexOf(last) + last.length
+            str = str.substring(0, length - olength)
+            return str.substring(0, index) + omission
+        }
+        return str + omission
+    },
+    unescape: function(string) {
+        return string.replace(/&amp;|&lt;|&gt;|&quot;|&#39;|&#96;/, function(match, index) {
+            switch (match) {
+                case '&amp;':
+                    return '&'
+                    break
+                case '&lt;':
+                    return '<'
+                    break
+                case '&gt;':
+                    return '>'
+                    break
+                case '&quot;':
+                    return '"'
+                    break
+                case '&#39;':
+                    return '\''
+                    break
+                case '&#96;':
+                    return '`'
+                    break
+            }
+        })
+    },
+    upperCase: function(string) {
+        var array = string.split('-')
+        array = this.compact(array)
+        var remove1 = array.join(' ')
+        array = remove1.split('_')
+        array = this.compact(array)
+        var remove2 = array.join('-')
+        var lastArr = remove2.split(' ') //['foo','Bar']
+        var lower = lastArr.join('-')
+        var testArr = lower.split('')
+        for (var i = 0; i < testArr.length; i++) {
+            if (testArr[i] == '-') {
+                lower = lower.split('-').join(' ').toUpperCase()
+                return lower
+            }
+        }
+        for (var j = 1; j < testArr.length; j++) {
+            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
+                testArr[j] = [' ' + testArr[j]]
+            }
+        }
+        lower = testArr.join('').toUpperCase()
+        return lower
+    },
+    upperFirst: function(string) {
+        var strArr = string.split('')
+        strArr[0] = strArr[0].toUpperCase()
+        var result = strArr.join('')
+        return result
+    },
+    words: function(str, pattern = /\w+/g) {
+        return str.match(pattern)
+    },
+    bindAll: function(obj, method) {
+        var f = obj[method[0]]
+        obj[method[0]] = function(...args) {
+            return f.apply(obj, args)
+        }
+        return obj
+    },
+    defaultTo: function(value, defaultValue) {
+        if (value != value || value === null || value === undefined) {
+            return defaultValue
+        }
+        return value
+    },
+    range: function(start = 0, end, step = 1) {
+        var result
+        if (end === undefined && start > 0) {
+            result = new Array(start).fill(0).map((it, index) => index)
+        } else if (end === undefined && start < 0) {
+            result = new Array(-start).fill(0).map((it, index) => -index + 0)
+        } else if (end === undefined && start == 0) {
+            result = []
+        } else if (step == undefined && start > end) {
+            result = []
+        } else {
+            result = new Array(Math.abs((start - end) / (step || 1))).fill(0).map((it, index) => start + step * index)
+        }
+        return result
+    },
+    rangeRight: function(start = 0, end, step = 1) {
+        var result
+        if (end === undefined && start > 0) {
+            result = new Array(start).fill(0).map((it, index) => index)
+        } else if (end === undefined && start < 0) {
+            result = new Array(-start).fill(0).map((it, index) => -index + 0)
+        } else if (end === undefined && start == 0) {
+            result = []
+        } else if (step == undefined && start > end) {
+            result = []
+        } else {
+            result = new Array(Math.abs((start - end) / (step || 1))).fill(0).map((it, index) => start + step * index)
+        }
+        return result.reverse()
+    },
+    mixin: function(obj, src, option) {
+        if (arguments.length < 3) {
+            op = {
+                'chain': true
+            }
+            result = _.runInContext()
+            for (var key in obj) {
+                if (typeof obj[key] === 'function') {
+                    Function.prototype[key] = obj[key]
+                }
+            }
+        } else {
+            for (var key in src) {
+                if (typeof obj === 'function' && typeof src[key] === 'function') {
+                    Function.prototype[key] = src[key]
+                } else {
+                    obj[key] = src[key]
+                }
+            }
+        }
+        return result
+    },
+    times: function(n, func) {
+        return arr = new Array(n).fill(0).map((it, index) => func(index))
+    },
+    toPath: function(path) {
+        return path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
+    },
+    uniqueId: function(prefix = '') {
+        this.count = this.count || 0
+        this.count++
+            return prefix + this.count
+    },
+    dellTo3355: function(word) {
+        var numArr = []
+        for (i = 0; i < word.length; i++) {
+            var x = word.charAt(i)
+            if (x == "a" || x == "b" || x == "c") {
+                numArr[i] = 2
+            }
+            if (x == "d" || x == "e" || x == "f") {
+                numArr[i] = 3
+            }
+            if (x == "g" || x == "h" || x == "i") {
+                numArr[i] = 4
+            }
+            if (x == "j" || x == "k" || x == "l") {
+                numArr[i] = 5
+            }
+            if (x == "m" || x == "n" || x == "o") {
+                numArr[i] = 6
+            }
+            if (x == "p" || x == "q" || x == "r" || x == "s") {
+                numArr[i] = 7
+            }
+            if (x == "t" || x == "u" || x == "v") {
+                numArr[i] = 8
+            }
+            if (x == "w" || x == "x" || x == "y" || x == "z") {
+                numArr[i] = 9
+            }
+        }
+        return Number(numArr.join(''))
+    },
+    isPrime: function(x) {
+        if (x < 2) {
+            return false
+        }
+        var m = Math.sqrt(x)
+        for (i = 2; i <= m; i++) {
+            if (x % i == 0) {
+                return false
+            }
+        }
+        return true
+    },
+    最大公约数: function(x, y) {
+        var lesser = x > y ? y : x
+        while (x % lesser != 0 || y % lesser != 0) {
+            lesser--
+        }
+        return lesser
+    },
+    大整数相加: function(x, y) {
+        var m = x.length - 1
+        var n = y.length - 1
+        var l = (m >= n ? m : n) + 2
+        var sum = []
+        while (l--) {
+            sum.push(0)
+        }
+        l = (m >= n ? m : n) + 2
+        for (var i = l - 1; i > 0; i--) {
+            sum[i] = (x[m] == undefined ? 0 : x[m]) + (y[n] == undefined ? 0 : y[n]) + sum[i]
+            sum[i - 1] = parseInt(sum[i] / 10)
+            sum[i] %= 10
+            m--
+            n--
+        }
+        if (sum[0] == 0) {
+            sum.shift()
+        }
+        return sum
+    },
+    'n-m之间的素数': function(a, b) {
+        var arr = []
+        for (var i = a; i <= b; i++) {
+            if (this.isPrime(i)) {
+                arr.push(i)
+            }
+        }
+        return arr
+    },
+    求数组最大项: function(a) {
+        return Math.max.apply(null, a)
+    },
+    '1-n的和': function(n) {
+        return (n * n + n) / 2
+    },
+    '1-n以内的完全数': function(n) {
+        function wanQuan(n) {
+            var sum = 1
+            for (var i = 2; i < n; i++) {
+                if (n % i == 0) {
+                    sum += i
+                }
+            }
+            return sum === n && n != 1
+        }
+        var result = []
+        for (var i = 1; i <= n; i++) {
+            if (wanQuan(i)) {
+                result.push(i)
+            }
+        }
+        return result
+    },
+    abc排序: function(...args) {
+        return args.sort()
+    },
+    fibb: function(n, cache = []) {
+        if (n < 3) {
+            return 1
+        }
+        if (n in cache) {
+            return cache[n]
+        } else {
+            cache[n] = this.fibb(n - 1, cache) + this.fibb(n - 2, cache)
+            return cache[n]
+        }
+    },
+    m的n次方: function(m, n) {
+        var result = 1
+        var counter = Math.abs(n)
+
+        if (m == 0 && n == 0) {
+            return NaN
+        }
+
+        while (counter--) {
+            result *= m
+        }
+
+        if (n < 0) {
+            return 1 / result
+        } else {
+            return result
+        }
+    },
+    jc: function(n) {
+        if (n == 1) {
+            return 1
+        } else {
+            return n * this.jc(n - 1)
+        }
+    },
+    'Sin-Taylor': function sin(x) {
+        var result = 0
+        for (var n = 0; n < 10; n++) {
+            result += (((Math.pow(-1, n)) / this.jc(2 * n + 1)) * (Math.pow(x, 2 * n + 1)))
+        }
+        return result
+    },
+    第一次只出现一次的字符: function(str) {
+        var obj = {}
+        for (var i = 0; i < str.length; i++) {
+            var char = str.charAt(i)
+            obj[char] = obj[char] + 1 || 1
+        }
+
+        for (var i = 0; i < str.length; i++) {
+            if (obj[str.charAt(i)] == 1) {
+                return str.charAt(i)
+            }
+        }
+        return null
+    },
+    反向输出一个三位数: function(a) {
+        return Number(String(a).split('').reverse().join(''))
+    },
+    分解质因数: function(a) {
+        var arr = new Array(a).fill(0).map((it, index) => index)
+        arr.map(it => {
+            if (!this.isPrime(it)) {
+                return false
+            } else {
+                return it
+            }
+        })
+        var result = []
+        for (var i = 1; i < arr.length; i++) {
+            if (Number.isInteger(a / arr[i])) {
+                if (arr[i] != 1) {
+                    result.push(arr[i])
+                }
+                a = a / arr[i]
+            }
+        }
+        if (a != 1) {
+            result.push(a)
+        }
+        return result
+
+    },
+    猴子选王: function(n, m) { //n为猴子个数，m为报的数
+        var firstNum = 1 //每轮报数开始第一个猴子报的数
+        function remain(x) { //x为报数之前的数组，remain(x)表示每轮报数完毕剩下的猴子组成的数组
+            var newArray = []
+            var n = x.length
+            var k = 0 //每轮报数用k记录数组下标
+            for (j = firstNum; j < firstNum + n; j++) {
+                if (j % m != 0) {
+                    newArray.push(x[k])
+                }
+                k += 1
+            }
+            firstNum += n
+            return newArray
+        }
+
+        var monkey = []
+        for (var i = 1; i <= n; i++) {
+            monkey.push(i)
+        }
+        var m1 = remain(monkey)
+
+        //报数直到最后的数组只有一项
+        for (var i = 1;; i++) {
+            m1 = remain(m1)
+            if (m1.length == 1) {
+                return m1[0]
+            }
+        }
+    },
+    评委打分: function(arr) {
+        var maximum = -Infinity
+        var minimum = Infinity
+        var sum = 0
+        for (var i = 0; i < arr.length; i++) {
+            sum += arr[i]
+
+            if (arr[i] >= maximum) {
+                maximum = arr[i]
+            }
+
+            if (arr[i] < minimum) {
+                minimum = arr[i]
+            }
+        }
+        return (sum - maximum - minimum) / (arr.length - 2)
+    },
+    敲7: function(n) {
+        var result = []
+        for (var i = 6; i <= n; i++) {
+            if (i % 7 == 0 || i % 10 == 7 || parseInt(i % 10) == 7) {
+                result.push(i)
+            }
+        }
+        return result
+    },
+    求平方根: function(n) {
+        var left = 0
+        var right = n
+        var middle = (left + right) / 2 //匹配浮点数平方根
+        var i = 0 //匹配整数平方根
+        while (Math.abs(middle * middle - n) > 0.000000000001) {
+            i++
+            if (i * i == n) {
+                return i
+            }
+            if (middle * middle > n) { //middle 大于 根号n
+                right = middle
+            }
+            if (middle * middle < n) { //middle 小于 根号n
+                left = middle
+            }
+
+            middle = (left + right) / 2
+        }
+        return middle
+    },
+    日历: function firstWeekdayOfMonthYear(year, month) {
+        var daysOfYear = (year * 365 + parseInt(year / 4) - parseInt(year / 100) + parseInt(year / 400))
+
+        var allDays = daysOfYear + daysUntillMonth(year, month)
+
+        var weekDay = (allDays + 6) % 7
+
+        return weekDay
+
+        /**
+         * 计算某一年1月到（month-1）月的天数之和
+         */
+        function daysUntillMonth(year, month) {
+            var daySum = 0
+            for (var i = 1; i < month; i++) {
+                daySum += daysOfMonth(year, i)
+            }
+            return daySum
+        }
+
+        /**
+         * 计算某年某月有多少天
+         * 例：daysOfMonth(2000,2) -> 29
+         */
+        function daysOfMonth(year, month) {
+            if (month == 2) {
+                if (isLeapYear(year)) {
+                    return 29
+                } else {
+                    return 28
+                }
+            }
+            switch (month) {
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    return 31
+                default:
+                    return 30
+            }
+        }
+
+        function isLeapYear(y) {
+            return (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0)
+        }
+
+    },
+    四舍五入: function(n) {
+        if (parseInt(n) == parseInt(n + 0.5)) {
+            return parseInt(n)
+        }
+        return parseInt(n) + 1
+
+    },
+    向量点积: function(v1, v2) {
+        var result = 0
+
+        for (var i = 0; i < v1.length; i++) {
+            result += v1[i] * v2[i]
+        }
+        return result
+    },
+    字符串展开: function expandStr(str) {
+        var result = ''
+        var dashStart, dashEnd
+        for (var i = 0; i < str.length; i++) {
+            if (str[i] == '-') {
+
+                dashStart = str.charCodeAt(i - 1) + 1
+                dashEnd = str.charCodeAt(i + 1) - 1
+                for (var j = dashStart; j <= dashEnd; j++) {
+                    result += String.fromCharCode(j)
+                }
+
+            } else {
+
+                result += str[i]
+
+            }
+        }
+        return result
+    },
+    最小公倍数: function(a, b) {
+        return a * b / this['最大公约数'](a, b)
+    },
+    '最小的能被1-n整除的数': function(n) {
+        if (n <= 10) {
+
+            for (k = 2;; k = k + 2) {
+
+                if (zhengChu(k)) {
+
+                    return k
+                }
+            }
+
+        }
+        if (n > 10 && n <= 20) {
+
+            for (k = 2520;; k = k + 2520) {
+
+                if (zhengChu(k)) {
+
+                    return k
+                }
+            }
+
+        }
+        if (n > 20 && n <= 30) {
+
+            for (k = 232792560;; k = k + 232792560) {
+
+                if (zhengChu(k)) {
+
+                    return k
+                }
+            }
+
+        }
+        if (n > 30) {
+
+            for (k = 2329089562800;; k = k + 2329089562800) {
+
+                if (zhengChu(k)) {
+
+                    return k
+                }
+            }
+
+        }
+
+        function zhengChu(x) {
+
+            for (i = 2; i <= n; i++) {
+
+                if (x % i != 0) {
+                    return false
+                }
+            }
+            return true
+        }
+
+    }
 }
