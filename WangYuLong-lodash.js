@@ -2862,29 +2862,12 @@ var WangYuLong = {
             }
         })
     },
-    upperCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var lower = lastArr.join('-')
-        var testArr = lower.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '-') {
-                lower = lower.split('-').join(' ').toUpperCase()
-                return lower
-            }
+    upperCase: function(str) {
+        str = str.replace(/\W|_/g, ' ').trim()
+        if (!str.includes(' ')) {
+            str = str.replace(/([0-9a-z])([A-Z])/, '$1 $2')
         }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = [' ' + testArr[j]]
-            }
-        }
-        lower = testArr.join('').toUpperCase()
-        return lower
+        return str.toUpperCase()
     },
     upperFirst: function(string) {
         var strArr = string.split('')
