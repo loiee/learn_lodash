@@ -471,30 +471,12 @@ var _ = {
         var escR = strArr.join('')
         return escR
     },
-    kebabCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var kebab = lastArr.join('-')
-        var testArr = kebab.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '-') {
-                kebab = kebab.toLowerCase()
-                kebab.replace(/\s+/g, '')
-                return kebab
-            }
+    kebabCase: function(str) {
+        str=str.replace(/\W|_/g,'-').replace(/^-+/,'').replace(/-+$/,'')
+        if(!str.includes('-')){
+            str=str.replace(/([0-9a-z])([A-Z])/,'$1-$2')
         }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = ['-' + testArr[j]]
-            }
-        }
-        kebab = testArr.join('').toLowerCase()
-        return kebab
+        return str.toLowerCase()
     },
     map: function(collection, iteratee) {
         var newArr = []
@@ -864,30 +846,12 @@ var _ = {
         string = strArr.join(' ')
         return string
     },
-    snakeCase: function(string) {
-        var array = string.split('-')
-        array = this.compact(array)
-        var remove1 = array.join(' ')
-        array = remove1.split('_')
-        array = this.compact(array)
-        var remove2 = array.join('-')
-        var lastArr = remove2.split(' ') //['foo','Bar']
-        var kebab = lastArr.join('_')
-        var testArr = kebab.split('')
-        for (var i = 0; i < testArr.length; i++) {
-            if (testArr[i] == '_') {
-                kebab = kebab.toLowerCase()
-                kebab.replace(/\s+/g, '')
-                return kebab
-            }
+    snakeCase: function(str) {
+        str=str.replace(/\W/g,'_').replace(/^_+/,'').replace(/_+$/,'')
+        if(!str.includes('_')){
+            str=str.replace(/([0-9a-z])([A-Z])/,'$1_$2')
         }
-        for (var j = 1; j < testArr.length; j++) {
-            if (testArr[j].charCodeAt() >= 65 && testArr[j].charCodeAt() <= 90) {
-                testArr[j] = ['_' + testArr[j]]
-            }
-        }
-        kebab = testArr.join('').toLowerCase()
-        return kebab
+        return str.toLowerCase()
     },
     includes: function(collection, value, fromIndex) {
         if (fromIndex == undefined) {
