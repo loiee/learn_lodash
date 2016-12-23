@@ -2131,7 +2131,7 @@ var WangYuLong = {
         return typeof value === 'object'
     },
     isPlainObject: function(value) {
-        return value instanceof Object || Object.getPrototypeOf(value) === null
+        return value.constructor === Object || Object.getPrototypeOf(value) === null
     },
     isRegExp: function(value) {
         return value instanceof RegExp
@@ -2266,7 +2266,7 @@ var WangYuLong = {
         }
         return Math.ceil(num * Math.pow(10, precision)) / Math.pow(10, precision)
     },
-    devide: function(a, b) {
+    divide: function(a, b) {
         return a / b
     },
     floor: function(num, precision) {
@@ -2590,7 +2590,7 @@ var WangYuLong = {
         }
         var o = {}
         for (var key in obj) {
-            if (func(obj[key]) in obj) {
+            if (func(obj[key]) in o) {
                 o[func(obj[key])].push(key)
             } else {
                 o[func(obj[key])] = [key]
@@ -2721,7 +2721,9 @@ var WangYuLong = {
         if (typeof path === 'string') {
             path = path.split('.').join(' ').split('[').join(' ').split(']').join('').split(' ')
         }
-        path.splice(path.indexOf(''), 1)
+        if (path.includes('')) {
+            path.splice(path.indexOf(''), 1)
+        }
         var pointer = obj
         for (var i = 0; i < path.length - 1; i++) {
             if (pointer[path[i]] === undefined) { //路径找不到的情况
@@ -2777,7 +2779,9 @@ var WangYuLong = {
     transform: function(obj, func, accumulator = Object.getPrototypeOf(obj)) {
         for (var key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                func(accumulator, obj[key], key, obj)
+                if (func(accumulator, obj[key], key, obj) === false) {
+                    return accumulator
+                }
             }
         }
         return accumulator
@@ -2905,7 +2909,7 @@ var WangYuLong = {
             str = str.substring(0, length - olength)
             return str.substring(0, index) + omission
         }
-        return str + omission
+        return str.substring(0, length - olength) + omission
     },
     unescape: function(string) {
         return string.replace(/&amp;|&lt;|&gt;|&quot;|&#39;|&#96;/, function(match, index) {
@@ -3185,7 +3189,7 @@ var WangYuLong = {
     },
     'Sin-Taylor': function sin(x) {
         var result = 0
-        for (var n = 0; n < 10; n++) {
+        for (var n = 0; n < 5; n++) {
             result += (((Math.pow(-1, n)) / this.jc(2 * n + 1)) * (Math.pow(x, 2 * n + 1)))
         }
         return result
@@ -3205,24 +3209,27 @@ var WangYuLong = {
         return null
     },
     反向输出一个三位数: function(a) {
-        return Number(String(a).split('').reverse().join(''))
+        return String(a).split('').reverse().join('')
     },
     分解质因数: function(a) {
         var arr = new Array(a).fill(0).map((it, index) => index)
-        arr.map(it => {
+        arr = arr.map(it => {
             if (!this.isPrime(it)) {
                 return false
             } else {
                 return it
             }
         })
-        var result = []
-        for (var i = 1; i < arr.length; i++) {
-            if (Number.isInteger(a / arr[i])) {
-                if (arr[i] != 1) {
-                    result.push(arr[i])
+        var result = [],
+            temp = a
+        for (var j = 1; j < Math.log2(temp); j++) {
+            for (var i = 1; i < arr.length; i++) {
+                if (Number.isInteger(a / arr[i])) {
+                    if (arr[i] != 1) {
+                        result.push(arr[i])
+                    }
+                    a = a / arr[i]
                 }
-                a = a / arr[i]
             }
         }
         if (a != 1) {
