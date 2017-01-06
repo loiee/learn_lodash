@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>todos</title>
+    <style>
+    body {
+        margin: 0;
+        background-color: #f5f5f5;
+    }
+    
+    h1 {
+        color: rgba(175, 47, 47, 0.15);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 100px;
+        font-weight: 100;
+        margin: 10px auto;
+        width: 552px;
+        text-align: center;
+    }
+    
+    .container {
+        width: 552px;
+        text-align: center;
+    }
+    
+    section {
+        width: 552px;
+        margin: 0 auto;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    .single {
+        position: relative;
+    }
+    
+    .down {
+        display: inline-block;
+        border: 3px solid #e6e6e6;
+        position: absolute;
+        border-left: none;
+        border-bottom: none;
+        transform: rotateZ(135deg);
+        width: 11px;
+        height: 11px;
+        top: 20px;
+        left: 16px;
+    }
+    
+    ._input {
+        padding-left: 60px;
+        width: 492px;
+        height: 60px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        outline: none;
+        font-size: 24px;
+        background-color: #fff;
+        border: none;
+        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+    
+    ._input.input2 {
+        width: 486px;
+        padding-left: 19px;
+        margin-left: 44px;
+    }
+    
+    ._input.input2:focus {
+        box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, 0.6);
+    }
+    
+    .firstInput {
+        box-shadow: inset 0px -2px 1px 0px rgba(0, 0, 0, 0.1);
+    }
+    
+    ::-webkit-input-placeholder {
+        font-style: italic;
+        color: #e6e6e6;
+    }
+    
+    .below {
+        position: relative;
+        background-color: #fff;
+        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+    }
+    
+    .circle {
+        position: absolute;
+        display: inline-block;
+        width: 29px;
+        height: 29px;
+        border: 1px solid #ededed;
+        border-radius: 50%;
+        top: 20px;
+        left: 9px;
+    }
+    
+    .circle.checked {
+        border: 1px solid #bddad5;
+        background-image: url(g.png);
+        background-repeat: no-repeat;
+        background-position: 3px 5px;
+    }
+    
+    .checked+._input {
+        color: #e6e6e6;
+        text-decoration: line-through;
+    }
+    
+    .delete {
+        display: inline-block;
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border: 2px solid;
+        margin-left: -48px;
+        margin-top: 25px;
+        transform: rotateZ(45deg);
+        opacity: 0;
+        color: #cc9a9a;
+        border-left: none;
+        border-bottom: none;
+        box-sizing: border-box;
+    }
+    
+    .delete:hover {
+        color: #af5b5e;
+    }
+    
+    .delete:before {
+        content: "";
+        display: inline-block;
+        position: absolute;
+        top: -16px;
+        left: -8px;
+        width: 30px;
+        height: 30px;
+    }
+    
+    .delete:after {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: -9px;
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border: 2px solid;
+        border-top: none;
+        border-right: none;
+        box-sizing: border-box;
+    }
+    
+    .below:hover>.delete {
+        opacity: 1;
+    }
+    
+    .bottom {
+        width: 552px;
+        margin: 0 auto;
+        text-align: center;
+        display: none;
+    }
+    
+    .text {
+        position: relative;
+        width: 552px;
+        height: 41px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 41px;
+        background-color: #fff;
+        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dec {
+        width: 544px;
+        margin: 0 auto;
+        height: 6px;
+        background-color: #fff;
+        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+    
+    .dec2 {
+        width: 536px;
+    }
+    
+    .text>span {
+        position: absolute;
+        left: 8px;
+        top: 7px;
+        height: 24px;
+        line-height: 24px;
+        color: rgba(0, 0, 0, 0.6);
+        display: inline-block;
+        padding: 0 8px;
+    }
+    
+    .text>.text2 {
+        left: 181px;
+        border: 1px solid rgba(239, 213, 213, 1);
+        border-radius: 3px;
+    }
+    
+    .text>.text3 {
+        left: 222px;
+        border: 1px solid rgba(239, 213, 213, 0);
+        border-radius: 3px;
+    }
+    
+    .text3:hover {
+        border: 1px solid rgba(239, 213, 213, 0.5);
+    }
+    
+    .text>.text4 {
+        left: 286px;
+        border: 1px solid rgba(239, 213, 213, 0);
+        border-radius: 3px;
+    }
+    
+    .text4:hover {
+        border: 1px solid rgba(239, 213, 213, 0.5);
+    }
+    
+    .text>.text5 {
+        display: none;
+        left: 430px;
+    }
+    
+    .text5:hover {
+        text-decoration: underline;
+    }
+    
+    .foot {
+        width: 300px;
+        text-align: center;
+        color: red;
+        margin: 65px auto 0;
+        color: #bfbfbf;
+        font-size: 10px;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    .foot1 {
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    
+    .allChecked {
+        border-color: rgba(6, 6, 6, 0.6);
+    }
+    </style>
+</head>
+
+<body>
+    <h1>todos</h1>
+    <section id="content">
+        <div class="container">
+            <div class="single">
+                <span class="down"></span>
+                <input type="text" class="_input firstInput" placeholder="What needs to be done?">
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="text">
+                <span class="text1"><span id="items"></span> <span id="oneOrMore"></span> left</span>
+                <span class="text2">All</span>
+                <span class="text3">Active</span>
+                <span class="text4">Completed</span>
+                <span class="text5">Clear completed</span>
+            </div>
+        </div>
+    </section>
+    <div class="dec dec1"></div>
+    <div class="dec dec2"></div>
+    <div class="foot">
+        <p class="foot1">Double-click to edit a todo</p>
+        <p class="foot1">Written by Wang Yulong</p>
+        <p class="foot1">Part of TodoMVC</p>
+    </div>
+</body>
+<script src="../jQuery/jquery-3.1.1.min.js"></script>
+<script>
+if (localStorage._todoStatus) {
+    $('#content').html(localStorage._todoStatus)
+}
+press('s')
+updateCount()
+$('.circle').css('display', '')
+$('.delete').css('display', '')
+var completed = false
+
+function press(e) {
+    var str = $('.firstInput').prop('value')
+
+    if (e.keyCode == 13 && str != '') {
+        $('.firstInput').prop('value', '')
+        $('.container').append(`<div class="below"><span class="circle"></span><input type="text" class="_input input2" value=${str} disabled><span class="delete"></span></div>`)
+
+    }
+
+    var toggle = function() {
+        this.classList.toggle('checked')
+    }
+    $('.circle').each((th, a) => a.onclick = toggle)
+    $('.below').each((th, a) => a.ondblclick = function(e) {
+        this.children[1].removeAttribute('disabled')
+        $(this.children[1]).focus()
+
+        $('.circle', this).css('display', 'none')
+        $('.delete', this).css('display', 'none')
+
+        $(this.children[1]).blur(function() {
+            this.setAttribute('disabled', 'true')
+            $('.circle').css('display', '')
+            $('.delete').css('display', '')
+        })
+        this.children[1].onkeydown = function(e) {
+            if (e.keyCode == 13) {
+                this.setAttribute('disabled', 'true')
+                $('.circle').css('display', '')
+                $('.delete').css('display', '')
+            }
+        }
+        this.children[1].selectionStart=10000
+    })
+
+    $('.delete').on('click', deleteOneItem)
+    $('.bottom').css('display', 'block')
+    $('.dec').css('display', 'block')
+
+    if (completed) {
+        showCompleted()
+    }
+}
+$('._input').on('keydown', press)
+
+function updateCount() {
+    var checkCount = $('.circle:not(.checked)')
+    $('#items').text(checkCount.length)
+    if (checkCount.length == 1) {
+        $('#oneOrMore').text('item')
+    } else {
+        $('#oneOrMore').text('items')
+    }
+    if ($('.circle').length == 0) {
+        $('.bottom').css('display', '')
+        $('.dec').css('display', '')
+    }
+
+    if ($('.circle.checked').length) {
+        $('.text5').css('display', 'inline-block')
+    }
+
+    localStorage._todoStatus = $('#content').html()
+}
+
+$(document).on('click', updateCount).on('keydown', updateCount)
+
+function deleteOneItem(e) {
+    $(e.target.parentNode).remove()
+}
+
+$('.text2').on('click', showAll)
+$('.text3').on('click', showActive)
+$('.text4').on('click', showCompleted)
+$('.text5').on('click', clearCompleted)
+
+
+function showAll() {
+    $('.below').css('display', 'block')
+    borderShow($(this))
+    borderHide($('.text3'))
+    borderHide($('.text4'))
+    completed = false
+}
+
+function showActive() {
+    $('.circle:not(.checked)').parent().css('display', 'block')
+    $('.circle.checked').parent().css('display', 'none')
+    borderShow($(this))
+    borderHide($('.text2'))
+    borderHide($('.text4'))
+    completed = false
+}
+
+function showCompleted() {
+    $('.circle:not(.checked)').parent().css('display', 'none')
+    $('.circle.checked').parent().css('display', 'block')
+    borderShow($(this))
+    borderHide($('.text2'))
+    borderHide($('.text3'))
+    completed = true
+}
+
+function clearCompleted() {
+    $('.circle.checked').parent().remove()
+    $(this).css('display', 'none')
+}
+
+function borderShow(th) {
+    th.css('border', '1px solid rgba(239, 213, 213, 1)')
+}
+
+function borderHide(th) {
+    th.css('border', '1px solid rgba(239, 213, 213, 0)')
+}
+
+function checkAll() {
+    if ($('.circle:not(.checked)').length != 0) {
+        $('.circle').addClass('checked')
+        $(this).addClass('allChecked')
+    } else {
+        $('.circle').toggleClass('checked')
+        $(this).toggleClass('allChecked')
+    }
+}
+
+$('.down').on('click', checkAll)
+</script>
+
+</html>
