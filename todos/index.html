@@ -5,8 +5,23 @@
     <meta charset="UTF-8">
     <title>todos</title>
     <style>
+    html {
+        overflow-y: scroll;
+    }
+    
+    :root {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    :root body {
+        position: absolute;
+    }
+    
     body {
-        margin: 0;
+        width: 100vw;
+        /padding-left: calc(100vw-100%);
+        overflow: hidden;
         background-color: #f5f5f5;
     }
     
@@ -301,11 +316,14 @@ function press(e) {
 
     }
 
-    var toggle = function() {
-        this.classList.toggle('checked')
-    }
-    $('.circle').each((th, a) => a.onclick = toggle)
-    $('.below').each((th, a) => a.ondblclick = function(e) {
+    $('.circle').on('click', function(e) {
+        $(this).toggleClass('checked')
+        e.stopPropagation()
+    }).on('dblclick', function(e) {
+        e.stopPropagation()
+    })
+
+    $('.below').on('dblclick', function(e) {
         this.children[1].removeAttribute('disabled')
         $(this.children[1]).focus()
 
@@ -324,7 +342,7 @@ function press(e) {
                 $('.delete').css('display', '')
             }
         }
-        this.children[1].selectionStart=10000
+        this.children[1].selectionStart = 10000
     })
 
     $('.delete').on('click', deleteOneItem)
