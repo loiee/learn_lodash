@@ -57,8 +57,8 @@
         border-left: none;
         border-bottom: none;
         transform: rotateZ(135deg);
-        width: 11px;
-        height: 11px;
+        width: 10px;
+        height: 10px;
         top: 20px;
         left: 16px;
     }
@@ -78,7 +78,7 @@
     
     ._input.input2 {
         width: 486px;
-        padding-left: 19px;
+        padding-left: 10px;
         margin-left: 44px;
     }
     
@@ -130,7 +130,7 @@
         width: 9px;
         height: 9px;
         border: 2px solid;
-        margin-left: -48px;
+        margin-left: -38px;
         margin-top: 25px;
         transform: rotateZ(45deg);
         opacity: 0;
@@ -181,13 +181,14 @@
     
     .text {
         position: relative;
-        width: 552px;
+        width: 554px;
         height: 41px;
+        left:-1px;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 14px;
         line-height: 41px;
         background-color: #fff;
-        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0px -1px 0px 1px rgba(0, 0, 0, 0.2);
     }
     
     .dec {
@@ -195,7 +196,7 @@
         margin: 0 auto;
         height: 6px;
         background-color: #fff;
-        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0px -1px 0px 1px rgba(0, 0, 0, 0.2);
         display: none;
     }
     
@@ -203,7 +204,7 @@
         width: 536px;
     }
     
-    .text>span {
+    .text>a {
         position: absolute;
         left: 8px;
         top: 7px;
@@ -212,8 +213,12 @@
         color: rgba(0, 0, 0, 0.6);
         display: inline-block;
         padding: 0 8px;
+        cursor: pointer;
     }
     
+    .text>.text1{
+		cursor: default;
+    }
     .text>.text2 {
         left: 181px;
         border: 1px solid rgba(239, 213, 213, 1);
@@ -242,7 +247,7 @@
     
     .text>.text5 {
         display: none;
-        left: 430px;
+        left: 424px;
     }
     
     .text5:hover {
@@ -264,7 +269,7 @@
     }
     
     .allChecked {
-        border-color: rgba(6, 6, 6, 0.6);
+        border-color: rgba(6, 6, 6, 0.5);
     }
     </style>
 </head>
@@ -280,11 +285,11 @@
         </div>
         <div class="bottom">
             <div class="text">
-                <span class="text1"><span id="items"></span> <span id="oneOrMore"></span> left</span>
-                <span class="text2">All</span>
-                <span class="text3">Active</span>
-                <span class="text4">Completed</span>
-                <span class="text5">Clear completed</span>
+                <a class="text1"><span id="items"></span> <span id="oneOrMore"></span> left</a>
+                <a class="text2">All</a>
+                <a class="text3">Active</a>
+                <a class="text4">Completed</a>
+                <a class="text5">Clear completed</a>
             </div>
         </div>
     </section>
@@ -316,14 +321,15 @@ function press(e) {
 
     }
 
-    $('.circle').on('click', function(e) {
+    $('.circle').each((th, it) => it.onclick = function(e) {
         $(this).toggleClass('checked')
-        e.stopPropagation()
-    }).on('dblclick', function(e) {
+    }).each((th, it) => it.ondblclick = function(e) {
         e.stopPropagation()
     })
 
-    $('.below').on('dblclick', function(e) {
+    $('.below').each((th, it) => it.ondblclick = function(e) {
+
+    	console.log(this,this.children[1])
         this.children[1].removeAttribute('disabled')
         $(this.children[1]).focus()
 
@@ -356,20 +362,32 @@ function press(e) {
 $('._input').on('keydown', press)
 
 function updateCount() {
-    var checkCount = $('.circle:not(.checked)')
-    $('#items').text(checkCount.length)
-    if (checkCount.length == 1) {
+    var checkCount = $('.circle:not(.checked)').length
+    $('#items').text(checkCount)
+    if (checkCount == 1) {
         $('#oneOrMore').text('item')
     } else {
         $('#oneOrMore').text('items')
     }
+
     if ($('.circle').length == 0) {
         $('.bottom').css('display', '')
         $('.dec').css('display', '')
+        $('.down').css('display','none')
+    }else{
+        $('.down').css('display','')    	
+    }
+
+    if(checkCount!=0){
+    	$('.down').removeClass('allChecked')
+    }else{
+    	$('.down').addClass('allChecked')    	
     }
 
     if ($('.circle.checked').length) {
         $('.text5').css('display', 'inline-block')
+    }else{
+        $('.text5').css('display', '')    	
     }
 
     localStorage._todoStatus = $('#content').html()
@@ -430,7 +448,7 @@ function checkAll() {
     if ($('.circle:not(.checked)').length != 0) {
         $('.circle').addClass('checked')
         $(this).addClass('allChecked')
-    } else {
+    } else if ($('.circle').length != 0) {
         $('.circle').toggleClass('checked')
         $(this).toggleClass('allChecked')
     }
