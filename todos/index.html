@@ -183,7 +183,7 @@
         position: relative;
         width: 554px;
         height: 41px;
-        left:-1px;
+        left: -1px;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 14px;
         line-height: 41px;
@@ -216,9 +216,10 @@
         cursor: pointer;
     }
     
-    .text>.text1{
-		cursor: default;
+    .text>.text1 {
+        cursor: default;
     }
+    
     .text>.text2 {
         left: 181px;
         border: 1px solid rgba(239, 213, 213, 1);
@@ -301,6 +302,7 @@
         <p class="foot1">Part of TodoMVC</p>
     </div>
 </body>
+
 <script src="../jQuery/jquery-3.1.1.min.js"></script>
 <script>
 if (localStorage._todoStatus) {
@@ -311,14 +313,17 @@ updateCount()
 $('.circle').css('display', '')
 $('.delete').css('display', '')
 var completed = false
+var count = 0
 
 function press(e) {
     var str = $('.firstInput').prop('value')
-
     if (e.keyCode == 13 && str != '') {
+        count++
         $('.firstInput').prop('value', '')
-        $('.container').append(`<div class="below"><span class="circle"></span><input type="text" class="_input input2" value=${str} disabled><span class="delete"></span></div>`)
 
+        $('.container').append(`<div class="below"><span class="circle"></span><input type="text" class="_input input2 index${count}" disabled><span class="delete"></span></div>`)
+
+        $('.index' + count).attr('value', str)
     }
 
     $('.circle').each((th, it) => it.onclick = function(e) {
@@ -328,8 +333,6 @@ function press(e) {
     })
 
     $('.below').each((th, it) => it.ondblclick = function(e) {
-
-    	console.log(this,this.children[1])
         this.children[1].removeAttribute('disabled')
         $(this.children[1]).focus()
 
@@ -373,21 +376,21 @@ function updateCount() {
     if ($('.circle').length == 0) {
         $('.bottom').css('display', '')
         $('.dec').css('display', '')
-        $('.down').css('display','none')
-    }else{
-        $('.down').css('display','')    	
+        $('.down').css('display', 'none')
+    } else {
+        $('.down').css('display', '')
     }
 
-    if(checkCount!=0){
-    	$('.down').removeClass('allChecked')
-    }else{
-    	$('.down').addClass('allChecked')    	
+    if (checkCount != 0) {
+        $('.down').removeClass('allChecked')
+    } else {
+        $('.down').addClass('allChecked')
     }
 
     if ($('.circle.checked').length) {
         $('.text5').css('display', 'inline-block')
-    }else{
-        $('.text5').css('display', '')    	
+    } else {
+        $('.text5').css('display', '')
     }
 
     localStorage._todoStatus = $('#content').html()
