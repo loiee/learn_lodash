@@ -1,4 +1,4 @@
-var WangYuLong = {
+var _ = {
     chunk: function(array, size) {
         var newArr = new Array(Math.ceil(array.length / size))
         for (var i = 0; i < newArr.length; i++) {
@@ -2954,6 +2954,9 @@ var WangYuLong = {
         this.count++
             return prefix + this.count
     },
+
+
+    //后面为一些小练习
     dellTo3355: function(word) {
         var numArr = []
         for (i = 0; i < word.length; i++) {
